@@ -15,7 +15,7 @@ namespace Cryptocurrencies_info.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(new CoinMarket().GetCoinMarket(10));
         }
 
         public IActionResult Privacy()
