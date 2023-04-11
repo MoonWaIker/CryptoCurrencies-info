@@ -1,0 +1,23 @@
+﻿@using Cryptocurrencies_info.Models
+@{
+    ViewData["Title"] = "List";
+}
+
+<div class="text-center">
+    @if (Model is not null)
+    {
+        <h1 class="display-4">Cryptocurrencies list</h1>
+        <table class="table">
+            <tr><td>Rank</td><td>Name</td><td>Current price</td><td>Price changing in percentage for 24h</td><td>Volume</td></tr>
+            @foreach(var coin in Model)
+            {
+                <tr><td>@coin.Rank</td><td>@coin.Name</td><td>@coin.CurrentPrice $</td><td>@coin.PriceChangePercentage24h %</td><td>@coin.Volume $</td></tr>
+            }
+        </table>
+    }
+    else
+    {
+        <h1 class="display-4">Whoops! An error occurred 😯</h1>
+        <h2 class="display-6">Check for connection and restart the page in a minute</h2>
+    }
+</div>
