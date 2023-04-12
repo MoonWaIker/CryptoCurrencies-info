@@ -1,0 +1,58 @@
+﻿@model CoinFull
+
+@{
+    ViewData["Title"] = "Coin";
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<h1>@Html.DisplayFor(model => model.Name)</h1>
+
+<div>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Rank)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Rank)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            Current price
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CurrentPrice) $
+        </dd>
+        <dt class = "col-sm-2">
+            Price changing in percentage for 24h
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PriceChangePercentage24h) %
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Volume)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Volume) $
+        </dd>
+    </dl>
+</div>
+<div>
+    <table class="table">
+        <tr><td>Market</td><td>Price</td></tr>
+        @foreach (var market in Model.Markets)
+        {
+            <tr>
+                <td>@market.Key</td>
+                <td>@market.Value $</td>
+            </tr>
+        }
+    </table>
+</div>

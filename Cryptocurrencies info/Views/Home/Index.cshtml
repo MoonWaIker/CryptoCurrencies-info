@@ -11,7 +11,13 @@
             <tr><td>Rank</td><td>Name</td><td>Current price</td><td>Price changing in percentage for 24h</td><td>Volume</td></tr>
             @foreach(var coin in Model)
             {
-                <tr><td>@coin.Rank</td><td>@coin.Name</td><td>@coin.CurrentPrice $</td><td>@coin.PriceChangePercentage24h %</td><td>@coin.Volume $</td></tr>
+                <tr>
+                    <td>@coin.Rank</td>
+                    <td><a asp-controller="Home" asp-action="Coin" asp-route-id="@coin.Id">@coin.Name</a></td>
+                    <td>@coin.CurrentPrice $</td>
+                    <td>@coin.PriceChangePercentage24h %</td>
+                    <td>@coin.Volume $</td>
+                </tr>
             }
         </table>
     }

@@ -14,10 +14,10 @@ class CoinMarket
     }
 
     // Get the coin
-    public Coin? GetCoin(string coinId)
+    public CoinFull? GetCoin(string coinId)
     {
         var response = client.Execute(new RestRequest($"/assets/{coinId}", Method.Get));
-        return response.IsSuccessful ? JObject.Parse(response.Content!)["data"]!.ToObject<Coin>() : null;
+        return response.IsSuccessful ? JObject.Parse(response.Content!)["data"]!.ToObject<CoinFull>() : null;
     }
 
     // Dictionary of markets - market and price

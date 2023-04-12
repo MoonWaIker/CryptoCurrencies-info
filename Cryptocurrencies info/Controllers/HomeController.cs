@@ -23,6 +23,11 @@ namespace Cryptocurrencies_info.Controllers
             return View(new CoinMarket().GetCoinMarket());
         }
 
+        public IActionResult Coin(string id)
+        {
+            return View(new CoinMarket().GetCoin(id));
+        }
+
         public IActionResult Privacy()
         {
             return View();
