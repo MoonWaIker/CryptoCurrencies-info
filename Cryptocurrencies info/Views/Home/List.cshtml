@@ -7,7 +7,7 @@
     <h1 class="display-4">Cryptocurrencies list</h1>
     <table class="table">
         <tr><td>Rank</td><td>Name</td><td>Current price</td><td>Price changing in percentage for 24h</td><td>Volume</td></tr>
-        @foreach (var coin in Model)
+        @foreach (var coin in Model.Data)
         {
             <tr>
                 <td>@coin.Rank</td>
@@ -18,4 +18,21 @@
             </tr>
         }
     </table>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(Model.PageNumber > 0 ? "" : "disabled")">
+                <a class="page-link" href="@Url.Action("List", new { pageNumber = Model.PageNumber - 1 })">Previous</a>
+            </li>
+            <li class="page-item @(Model.PageNumber > 0 ? "" : "disabled")">
+                <a class="page-link" href="@Url.Action("List", new { pageNumber = 0 })">First</a>
+            </li>
+            <li class="page-item @(Model.PageNumber < Model.MaxPages ? "" : "disabled")">
+                <a class="page-link" href="@Url.Action("List", new { pageNumber = Model.MaxPages })">Last</a>
+            </li>
+            <li class="page-item @(Model.PageNumber < Model.MaxPages ? "" : "disabled")">
+                <a class="page-link" href="@Url.Action("List", new { pageNumber = Model.PageNumber + 1 })">Next</a>
+            </li>
+        </ul>
+    </nav>
+
 </div>

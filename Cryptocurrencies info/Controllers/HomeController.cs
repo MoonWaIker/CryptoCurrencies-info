@@ -18,9 +18,15 @@ namespace Cryptocurrencies_info.Controllers
             return View(new CoinMarket().GetCoinMarket(10));
         }
 
-        public IActionResult List()
+        public IActionResult List(int pageNumber)
         {
-            return View(new CoinMarket().GetCoinMarket());
+            var coinMarket = new CoinMarket().GetCoinMarket();
+            return View(new
+            {
+                Data = coinMarket.Skip(pageNumber * 100).Take(100),
+                PageNumber = pageNumber,
+                MaxPages = coinMarket.Count() / 100 - 1
+            });
         }
 
         public IActionResult Coin(string id)

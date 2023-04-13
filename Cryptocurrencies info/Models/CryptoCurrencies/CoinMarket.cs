@@ -3,14 +3,26 @@ using Newtonsoft.Json.Linq;
 
 class CoinMarket
 {
+    int maxCoins = 2000;
     private RestClient client = new RestClient("https://api.coincap.io/v2");
 
     // Get all coins
-    public Coin[]? GetCoinMarket() => GetCoinMarket(100);
+    public Coin[]? GetCoinMarket() => GetCoinMarket(maxCoins);
+
     public Coin[]? GetCoinMarket(int limit)
     {
         var response = client.Execute(new RestRequest("/assets", Method.Get).AddParameter("limit", limit));
-        return response.IsSuccessful ? JObject.Parse(response.Content!)["data"]!.ToObject<Coin[]>() : null;
+        return response.IsSuccessful ? JObject.Parse(response.Content!)["data"]
+            .Where(coin =>
+                coin["rank"].Type != JTokenType.Null &&
+                coin["name"].Type != JTokenType.Null &&
+                coin["id"].Type != JTokenType.Null &&
+                coin["priceUsd"].Type != JTokenType.Null &&
+                coin["changePercent24Hr"].Type != JTokenType.Null &&
+                coin["volumeUsd24Hr"].Type != JTokenType.Null
+            )
+            .Select(coin => coin.ToObject<Coin>())
+            .ToArray<Coin>() : null;
     }
 
     // Get the coin
@@ -37,7 +49,7 @@ class CoinMarket
     // Get the array of coins
     public string[]? GetCoinArray()
     {
-        var response = client.Execute(new RestRequest("/assets", Method.Get).AddParameter("limit", 2000));
+        var response = client.Execute(new RestRequest("/assets", Method.Get).AddParameter("limit", maxCoins));
         return response.IsSuccessful ? JObject.Parse(response.Content!)["data"]!.Select(c => (string?)c["id"]).ToArray() : null;
     }
 }
