@@ -21,7 +21,7 @@ namespace Cryptocurrencies_info.Controllers
 
         public IActionResult List(int pageNumber, string searchString)
         {
-            var coinMarket = string.IsNullOrEmpty(searchString) ? new CoinMarket().GetCoinMarket().Skip(pageNumber * 100).Take(100) : new CoinMarket().GetCoinMarket().Skip(pageNumber * 100).Take(100).Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString));
+            var coinMarket = string.IsNullOrEmpty(searchString) ? new CoinMarket().GetCoinMarket()!.Skip(pageNumber * 100).Take(100) : new CoinMarket().GetCoinMarket()!.Skip(pageNumber * 100).Take(100).Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString));
             return View(new
             {
                 Data = coinMarket,

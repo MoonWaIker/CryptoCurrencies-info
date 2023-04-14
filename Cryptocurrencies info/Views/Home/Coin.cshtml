@@ -5,12 +5,8 @@
 }
 
 <div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-<h1>@Html.DisplayFor(model => model.Name)</h1>
-
-<div>
+    <input type="button" href="javascript:void(0);" onclick="history.go(-1);" value="Return" class="btn btn-primary"/>
+    <h1>@Html.DisplayFor(model => model.Name)</h1>
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Rank)
