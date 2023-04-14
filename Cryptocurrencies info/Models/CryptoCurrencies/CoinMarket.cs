@@ -40,10 +40,10 @@ class CoinMarket
     }
 
     // Exchange coins
-    public decimal? GetExchange(string from, string to, decimal count)
+    public decimal? GetExchange(string from, string to, decimal amount)
     {
         var response = client.Execute(new RestRequest("/assets", Method.Get).AddParameter("ids", $"{from},{to}"));
-        return response.IsSuccessful ? JObject.Parse(response.Content!)["data"]!.Select(i => (decimal?)i["priceUsd"]).Aggregate((x, y) => x / y * count) : null;
+        return response.IsSuccessful ? JObject.Parse(response.Content!)["data"]!.Select(i => (decimal?)i["priceUsd"]).Aggregate((x, y) => x / y * amount) : null;
     }
 
     // Get the array of coins

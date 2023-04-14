@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Coin";
+}
+
+<div class="text-center">
+    <label for="dropdown1">Convert from</label>
+    <div class="mb-3">
+        @Html.DropDownList("dropdown1", new SelectList(Model))
+    </div>
+    <label for="dropdown2">To</label>
+    <div class="mb-3">
+        @Html.DropDownList("dropdown2", new SelectList(Model))
+    </div>
+    <form class="form-inline">
+        <div class="form-group">
+            <input class="form-control-sm" placeholder="Amount">
+            <input type="button" value="Calculate" class="btn btn-primary" />
+        </div>
+    </form>
+</div>

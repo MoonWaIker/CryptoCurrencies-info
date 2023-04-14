@@ -5,6 +5,12 @@
 
 <div class="text-center">
     <h1 class="display-4">Cryptocurrencies list</h1>
+    <form class="form-inline" asp-action="List">
+        <div class="form-group">
+            <input class="form-control-sm" name="searchString" placeholder="Search a coin">
+            <input type="submit" value="Find" class="btn btn-primary" />
+        </div>
+    </form>
     <table class="table">
         <tr><td>Rank</td><td>Name</td><td>Current price</td><td>Price changing in percentage for 24h</td><td>Volume</td></tr>
         @foreach (var coin in Model.Data)

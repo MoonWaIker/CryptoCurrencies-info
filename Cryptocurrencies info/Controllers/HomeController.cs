@@ -13,17 +13,18 @@ namespace Cryptocurrencies_info.Controllers
             _logger = logger;
         }
 
+        // Do not forget set atributes
         public IActionResult Index()
         {
             return View(new CoinMarket().GetCoinMarket(10));
         }
 
-        public IActionResult List(int pageNumber)
+        public IActionResult List(int pageNumber, string searchString)
         {
-            var coinMarket = new CoinMarket().GetCoinMarket();
+            var coinMarket = string.IsNullOrEmpty(searchString) ? new CoinMarket().GetCoinMarket().Skip(pageNumber * 100).Take(100) : new CoinMarket().GetCoinMarket().Skip(pageNumber * 100).Take(100).Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString));
             return View(new
             {
-                Data = coinMarket.Skip(pageNumber * 100).Take(100),
+                Data = coinMarket,
                 PageNumber = pageNumber,
                 MaxPages = coinMarket.Count() / 100 - 1
             });
@@ -32,6 +33,11 @@ namespace Cryptocurrencies_info.Controllers
         public IActionResult Coin(string id)
         {
             return View(new CoinMarket().GetCoin(id));
+        }
+
+        public IActionResult Calculator()
+        {
+            return View(new CoinMarket().GetCoinArray());
         }
 
         public IActionResult Privacy()
