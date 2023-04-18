@@ -1,7 +1,7 @@
 ﻿using RestSharp;
 using Newtonsoft.Json.Linq;
 
-class CoinMarket
+public class CoinMarket
 {
     int maxCoins = 2000;
     private RestClient client = new RestClient("https://api.coincap.io/v2");

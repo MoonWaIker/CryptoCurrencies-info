@@ -6,24 +6,25 @@ namespace Cryptocurrencies_info.Controllers
 {
     public class HomeController : Controller
     {
-        private CoinMarket coinMarket = new CoinMarket();
+        private CoinMarket _coinMarket;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, CoinMarket coinMarket)
         {
             _logger = logger;
+            _coinMarket = coinMarket;
         }
 
         // Do not forget set atributes
         public IActionResult Index()
         {
-            return View(coinMarket.GetCoinMarket(10));
+            return View(_coinMarket.GetCoinMarket(10));
         }
 
         public IActionResult List(int pageNumber, string searchString)
         {
             int size = 100;
-            var coins = coinMarket.GetCoinMarket();
+            var coins = _coinMarket.GetCoinMarket();
             // Can I use sugar synt. here?
             if (!string.IsNullOrEmpty(searchString))
                 coins = coins.Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString)).ToArray();
@@ -38,12 +39,12 @@ namespace Cryptocurrencies_info.Controllers
 
         public IActionResult Coin(string id)
         {
-            return View(coinMarket.GetCoin(id));
+            return View(_coinMarket.GetCoin(id));
         }
 
         public IActionResult Calculator()
         {
-            return View(coinMarket.GetCoinArray());
+            return View(_coinMarket.GetCoinArray());
         }
 
         public IActionResult Privacy()
