@@ -3,8 +3,8 @@ using Newtonsoft.Json.Linq;
 
 public class CoinMarket
 {
-    int maxCoins = 2000;
-    private RestClient client = new RestClient("https://api.coincap.io/v2");
+    private const int maxCoins = 2000;
+    private readonly RestClient client = new RestClient("https://api.coincap.io/v2");
 
     // Get all coins
     public Coin[]? GetCoinMarket() => GetCoinMarket(maxCoins);
