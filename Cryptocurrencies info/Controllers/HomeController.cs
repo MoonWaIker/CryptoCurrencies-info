@@ -6,7 +6,7 @@ namespace Cryptocurrencies_info.Controllers
 {
     public class HomeController : Controller
     {
-        private CoinMarket _coinMarket;
+        private readonly CoinMarket _coinMarket;
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger, CoinMarket coinMarket)
@@ -16,10 +16,7 @@ namespace Cryptocurrencies_info.Controllers
         }
 
         // Do not forget set atributes
-        public IActionResult Index()
-        {
-            return View(_coinMarket.GetCoinMarket(10));
-        }
+        public IActionResult Index() => View(_coinMarket.GetCoinMarket(10));
 
         public IActionResult List(int pageNumber, string searchString)
         {
@@ -37,25 +34,13 @@ namespace Cryptocurrencies_info.Controllers
             });
         }
 
-        public IActionResult Coin(string id)
-        {
-            return View(_coinMarket.GetCoin(id));
-        }
+        public IActionResult Coin(string id) => View(_coinMarket.GetCoin(id));
 
-        public IActionResult Calculator()
-        {
-            return View(_coinMarket.GetCoinArray());
-        }
+        public IActionResult Calculator() => View(_coinMarket.GetCoinArray());
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        public IActionResult Error() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
