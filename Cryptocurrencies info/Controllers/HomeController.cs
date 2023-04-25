@@ -7,32 +7,20 @@ namespace Cryptocurrencies_info.Controllers
     public class HomeController : Controller
     {
         private readonly CoinMarket _coinMarket;
+        private readonly Processing _processing;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, CoinMarket coinMarket)
+        public HomeController(ILogger<HomeController> logger, CoinMarket coinMarket, Processing processing)
         {
             _logger = logger;
             _coinMarket = coinMarket;
+            _processing = processing;
         }
 
         // Do not forget set atributes
         public IActionResult Index() => View(_coinMarket.GetCoinMarket(10));
 
-        public IActionResult List(int pageNumber, string searchString)
-        {
-            int size = 100;
-            var coins = _coinMarket.GetCoinMarket();
-            // Can I use sugar synt. here?
-            if (!string.IsNullOrEmpty(searchString))
-                coins = coins.Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString)).ToArray();
-            return View(new
-            {
-                Data = coins.Skip(size * pageNumber).Take(size),
-                PageNumber = pageNumber,
-                MaxPages = coins.Count() / size - 1,
-                Size = size
-            });
-        }
+        public IActionResult List(int pageNumber, string searchString) => View(_processing.Pagination(pageNumber, searchString));
 
         public IActionResult Coin(string id) => View(_coinMarket.GetCoin(id));
 
