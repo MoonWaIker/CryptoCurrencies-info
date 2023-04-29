@@ -13,10 +13,14 @@
         var coins = _coinMarket.GetCoinMarket();
         // Can I use sugar synt. here?
         if (!string.IsNullOrEmpty(searchString))
-            coins = coins.Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString)).ToArray();
+            coins = coins
+                .Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString))
+                .ToArray();
         return new
         {
-            Data = coins.Skip(size * pageNumber).Take(size),
+            Data = coins
+            .Skip(size * pageNumber)
+            .Take(size),
             PageNumber = pageNumber,
             MaxPages = coins.Count() / size - 1,
             Size = size
