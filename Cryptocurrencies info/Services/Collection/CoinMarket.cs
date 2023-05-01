@@ -34,8 +34,12 @@ public class CoinMarket
     {
         RestRequest request = new RestRequest($"/assets/{coinId}", Method.Get);
         var response = client.Execute(request);
-        if (response.IsSuccessful)
-            return JObject.Parse(response.Content)["data"].ToObject<CoinFull>();
+        if (response.IsSuccessful) 
+        {
+            var Coin = JObject.Parse(response.Content)["data"].ToObject<CoinFull>();
+            Coin.SetMarkets(this);
+            return Coin;
+        }
         else
             return null;
     }
