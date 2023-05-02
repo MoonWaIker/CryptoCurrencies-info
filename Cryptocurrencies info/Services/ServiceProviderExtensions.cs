@@ -4,5 +4,6 @@
     {
         services.AddTransient<CoinMarket>();
         services.AddTransient<Processing>();
+        services.AddTransient<Handler>();
     }
 }

@@ -6,25 +6,23 @@ namespace Cryptocurrencies_info.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly CoinMarket _coinMarket;
-        private readonly Processing _processing;
+        private readonly Handler _handler;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, CoinMarket coinMarket, Processing processing)
+        public HomeController(ILogger<HomeController> logger, Handler handler)
         {
             _logger = logger;
-            _coinMarket = coinMarket;
-            _processing = processing;
+            _handler = handler;
         }
 
         // Do not forget set atributes
-        public IActionResult Index() => View(_coinMarket.GetCoinMarket(10));
+        public IActionResult Index() => View(_handler.coinMarket.GetCoinMarket(10));
 
-        public IActionResult List(int pageNumber, string searchString) => View(_processing.Pagination(pageNumber, searchString));
+        public IActionResult List(int pageNumber, string searchString) => View(_handler.processing.Pagination(pageNumber, searchString));
 
-        public IActionResult Coin(string id) => View(_coinMarket.GetCoin(id));
+        public IActionResult Coin(string id) => View(_handler.coinMarket.GetCoin(id));
 
-        public IActionResult Calculator() => View(_coinMarket.GetCoinArray());
+        public IActionResult Calculator() => View(_handler.coinMarket.GetCoinArray());
 
         public IActionResult Privacy() => View();
 
