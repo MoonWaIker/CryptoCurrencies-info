@@ -61,11 +61,7 @@
         <img src="@collapse.First().Logo" />
         <details>
             <summary>
-                @collapse.Key @(collapse
-                        .GroupBy(item => item.Trust)
-                        .OrderByDescending(item => item.Count())
-                        .Select(item => item.Key)
-                        .FirstOrDefault())
+                @collapse.Key
             </summary>
             <table class="table">
                 <tr><td>Market</td><td>Base</td><td>Target</td><td>Price</td><td>Trust status</td></tr>
