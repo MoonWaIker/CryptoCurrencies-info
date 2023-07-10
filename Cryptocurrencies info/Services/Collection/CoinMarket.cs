@@ -1,13 +1,21 @@
 ﻿using RestSharp;
 using Newtonsoft.Json.Linq;
+using Microsoft.IdentityModel.Tokens;
 
 public class CoinMarket
 {
-    private const int maxCoins = 2000;
+    private const int maxCount = 2000;
     private readonly RestClient client = new RestClient("https://api.coincap.io/v2");
+    private readonly CoinMarketDB _coinMarketDB;
+
+    // Constructor
+    public CoinMarket(CoinMarketDB coinMarketDB) 
+    {
+        this._coinMarketDB = coinMarketDB;
+    }
 
     // Get all coins
-    public Coin[]? GetCoinMarket() => GetCoinMarket(maxCoins);
+    public Coin[]? GetCoinMarket() => GetCoinMarket(maxCount);
 
     public Coin[]? GetCoinMarket(int limit)
     {
@@ -30,29 +38,13 @@ public class CoinMarket
     }
 
     // Get the coin
-    public CoinFull? GetCoin(string coinId)
+    public Coin? GetCoin(string coinId)
     {
         RestRequest request = new RestRequest($"/assets/{coinId}", Method.Get);
         var response = client.Execute(request);
-        if (response.IsSuccessful) 
-        {
-            var Coin = JObject.Parse(response.Content)["data"].ToObject<CoinFull>();
-            Coin.SetMarkets(this);
-            return Coin;
-        }
-        else
-            return null;
-    }
-
-    // Dictionary of markets - market and price
-    public Dictionary<string, decimal>? GetMarkets(string coinId)
-    {
-        RestRequest request = new RestRequest($"/assets/{coinId}/markets", Method.Get);
-        var response = client.Execute(request);
         if (response.IsSuccessful)
             return JObject.Parse(response.Content)["data"]
-                .DistinctBy(c => (string)c["exchangeId"])
-                .ToDictionary(c => (string)c["exchangeId"], c => (decimal)c["priceUsd"]);
+                .ToObject<Coin>();
         else
             return null;
     }
@@ -70,14 +62,73 @@ public class CoinMarket
             return null;
     }
 
-    // Get the array of coins
+    // Get an array of coins
     public string[]? GetCoinArray()
     {
-        RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("limit", maxCoins);
+        RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("limit", maxCount);
         var response = client.Execute(request);
         if (response.IsSuccessful)
             return JObject.Parse(response.Content)["data"]
                 .Select(c => (string)c["id"])
+                .ToArray();
+        else
+            return null;
+    }
+
+    // Get markets of coin
+    public Market[]? GetMarkets(string coinId)
+    {
+        // Initialization
+        // Markets from CoinCap
+        var markets = GetMarketsList(coinId);
+
+        // Markets from SQL
+        if(!markets.IsNullOrEmpty())
+        {
+            var marketSQL = _coinMarketDB.GetMarkets(markets);
+
+            return marketSQL
+                .Join(markets,
+                market1 =>
+                new
+                {
+                    Name = market1.Name.ToLower(),
+                    market1.Base,
+                    market1.Target
+                },
+                market2 =>
+                new
+                {
+                    Name = market2.Name.ToLower(),
+                    market2.Base,
+                    market2.Target
+                },
+                (market1, market2) =>
+                new Market
+                {
+                    Name = market1.Name,
+                    Base = market1.Base,
+                    Target = market1.Target,
+                    Price = market2.Price,
+                    Trust = market1.Trust,
+                    Logo = market1.Logo,
+                    Link = market1.Link,
+                })
+                .ToArray();
+        }
+        else
+            return null;
+    }
+
+    // Get markets list with price from CoinCap
+    private Market[]? GetMarketsList(string coinId)
+    {
+        RestRequest request = new RestRequest($"/assets/{coinId}/markets", Method.Get).AddParameter("limit", maxCount);
+        var response = client.Execute(request);
+        if (response.IsSuccessful)
+            return JObject.Parse(response.Content)["data"]
+                .Where(market => market["priceUsd"].Type is not JTokenType.Null)
+                .Select(market => market.ToObject<Market>())
                 .ToArray();
         else
             return null;

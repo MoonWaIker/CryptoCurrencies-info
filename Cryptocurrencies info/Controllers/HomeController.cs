@@ -20,7 +20,7 @@ namespace Cryptocurrencies_info.Controllers
 
         public IActionResult List(int pageNumber, string searchString) => View(_handler.processing.Pagination(pageNumber, searchString));
 
-        public IActionResult Coin(string id) => View(_handler.coinMarket.GetCoin(id));
+        public IActionResult Coin(string id) => View((_handler.coinMarket.GetCoin(id), _handler.coinMarket.GetMarkets(id)));
 
         public IActionResult Calculator() => View(_handler.coinMarket.GetCoinArray());
 

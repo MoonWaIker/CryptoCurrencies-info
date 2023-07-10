@@ -1,4 +1,4 @@
-﻿@model CoinFull
+﻿@model (Coin, Market[])
 
 @{
     ViewData["Title"] = "Coin";
@@ -6,49 +6,82 @@
 
 <div>
     <input type="button" href="javascript:void(0);" onclick="history.go(-1);" value="Return" class="btn btn-primary"/>
-    <h1>@Html.DisplayFor(model => model.Name)</h1>
+    <h1>@Html.DisplayFor(model => model.Item1.Name)</h1>
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rank)
+            @Html.DisplayNameFor(model => model.Item1.Rank)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rank)
+            @Html.DisplayFor(model => model.Item1.Rank)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
+            @Html.DisplayNameFor(model => model.Item1.Id)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
+            @Html.DisplayFor(model => model.Item1.Id)
         </dd>
         <dt class = "col-sm-2">
             Current price
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CurrentPrice) $
+            @Html.DisplayFor(model => model.Item1.CurrentPrice) $
         </dd>
         <dt class = "col-sm-2">
             Price changing in percentage for 24h
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PriceChangePercentage24h) %
+            @Html.DisplayFor(model => model.Item1.PriceChangePercentage24h) %
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Volume)
+            @Html.DisplayNameFor(model => model.Item1.Volume)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Volume) $
+            @Html.DisplayFor(model => model.Item1.Volume) $
         </dd>
     </dl>
 </div>
+
 <div>
-    <table class="table">
-        <tr><td>Market</td><td>Price</td></tr>
-        @foreach (var market in Model.Markets)
-        {
-            <tr>
-                <td>@market.Key</td>
-                <td>@market.Value $</td>
-            </tr>
-        }
-    </table>
+    @foreach (var collapse in Model.Item2
+    .GroupBy(market => market.Name)
+    .OrderBy(market => market
+    .Average(obj =>
+    {
+       if (obj.Trust == "green")
+           return 0;
+       if (obj.Trust == "yellow")
+           return 1;
+       if (obj.Trust == "red")
+           return 2;
+       return 3;
+    })))
+    {
+        <img src="@collapse.First().Logo" />
+        <details>
+            <summary>
+                @collapse.Key @(collapse
+                        .GroupBy(item => item.Trust)
+                        .OrderByDescending(item => item.Count())
+                        .Select(item => item.Key)
+                        .FirstOrDefault())
+            </summary>
+            <table class="table">
+                <tr><td>Market</td><td>Base</td><td>Target</td><td>Price</td><td>Trust status</td></tr>
+                @foreach (var market in collapse)
+                {
+                    <tr>
+                        <td>
+                            <a @(!string.IsNullOrEmpty(market.Link) ? $"href={market.Link}" : "")>
+                                @market.Name
+                            </a>
+                        </td>
+                        <td>@market.Base</td>
+                        <td>@market.Target</td>
+                        <td>@market.Price $</td>
+                        <td>@market.Trust</td>
+                    </tr>
+                }
+            </table>
+        </details>
+    }
 </div>

@@ -7,6 +7,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddServices();
 
 var app = builder.Build();
+var coinGecko = app.Services.GetService<CoinGecko>();
+Task parser = Task.Run(coinGecko!.FindMarkets);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

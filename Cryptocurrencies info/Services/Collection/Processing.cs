@@ -11,7 +11,6 @@
     public Object Pagination(int pageNumber, string searchString)
     {
         var coins = _coinMarket.GetCoinMarket();
-        // Can I use sugar synt. here?
         if (!string.IsNullOrEmpty(searchString))
             coins = coins
                 .Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString))
