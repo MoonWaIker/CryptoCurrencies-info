@@ -45,6 +45,8 @@
     @foreach (var collapse in Model.Item2
     .GroupBy(market => market.Name)
     .OrderBy(market => market
+    .Average(item => item.Price))
+    .OrderBy(market => market
     .Average(obj =>
     {
        if (obj.Trust == "green")
@@ -52,8 +54,8 @@
        if (obj.Trust == "yellow")
            return 1;
        if (obj.Trust == "red")
-           return 2;
-       return 3;
+           return 3;
+       return 2;
     })))
     {
         <img src="@collapse.First().Logo" />
