@@ -6,26 +6,25 @@ public class CoinGecko
 {
     // Initialization
     private readonly string[] marketsList = ParseMarketsId();
-    private static readonly RestClient client = new RestClient("https://api.coingecko.com/api/v3/");
-    private readonly CoinMarketDB _coinMarketDB;
+    private static readonly RestClient client = new("https://api.coingecko.com/api/v3/");
+    private readonly IConnection _connection;
 
     // Constructor
-    public CoinGecko(CoinMarketDB coinMarketDB)
+    public CoinGecko(IConnection connection)
     {
-        this._coinMarketDB = coinMarketDB;
+        this._connection = connection;
     }
 
     // Parse dictionary of Coins id and symbol
     protected static string[] ParseMarketsId()
     {
-        RestRequest request = new RestRequest("/exchanges/list", Method.Get);
-        var response = client.Execute(request);
-        if (response.IsSuccessful)
-            return JArray.Parse(response.Content)
+        RestRequest request = new("/exchanges/list", Method.Get);
+        RestResponse response = client.Execute(request);
+        return response.IsSuccessful
+            ? JArray.Parse(response.Content)
                 .Select(item => (string)item["id"])
-                .ToArray();
-        else
-            return null;
+                .ToArray()
+            : throw new FormatException();
     }
 
     // Find markets
@@ -52,7 +51,7 @@ public class CoinGecko
                         if (JObject.Parse(response.Content)["tickers"].IsNullOrEmpty())
                             break;
                         page++;
-                        _coinMarketDB.AddMarkets(JObject.Parse(response.Content)["tickers"]
+                        _connection.AddMarkets(JObject.Parse(response.Content)["tickers"]
                             .Select(ticker =>
                             new Market
                             {

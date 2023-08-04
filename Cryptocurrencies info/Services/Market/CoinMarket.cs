@@ -6,12 +6,12 @@ public class CoinMarket
 {
     private const int maxCount = 2000;
     private readonly RestClient client = new RestClient("https://api.coincap.io/v2");
-    private readonly CoinMarketDB _coinMarketDB;
+    private readonly IConnection _connection;
 
     // Constructor
-    public CoinMarket(CoinMarketDB coinMarketDB) 
+    public CoinMarket(IConnection connection)
     {
-        this._coinMarketDB = coinMarketDB;
+        this._connection = connection;
     }
 
     // Get all coins
@@ -85,7 +85,14 @@ public class CoinMarket
         // Markets from SQL
         if(!markets.IsNullOrEmpty())
         {
-            var marketSQL = _coinMarketDB.GetMarkets(markets);
+            var marketSQL = _connection.GetMarkets(markets
+            .Select(market => new MarketBase
+                                    {
+                                        Name = market.Name,
+                                        Base = market.Base,
+                                        Target = market.Target,
+                                    })
+            .ToArray());
 
             return marketSQL
                 .Join(markets,

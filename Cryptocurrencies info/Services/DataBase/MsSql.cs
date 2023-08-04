@@ -1,13 +1,13 @@
 ﻿using Microsoft.Data.SqlClient;
 
-public class CoinMarketDB
+public class MsSql : IConnection
 {
     // Hardcodes
     private const string tableName = "CoinMarket";
     private const string connectionString = "Server=(localdb)\\mssqllocaldb;Database=cryptocurrencies;Trusted_Connection=True;";
 
     // Add markets to sql
-    public void AddMarkets(Market[] markets) 
+    public void AddMarkets(Market[] markets)
     {
         string marketStr = string.Join(",", markets
             .Select(market => $"('{market.Name}', '{market.Base}', '{market.Target}', '{market.Trust}', '{market.Link}', '{market.Logo}')"));
@@ -37,7 +37,7 @@ public class CoinMarketDB
     }
 
     // Read and return data from sql
-    public Market[] GetMarkets(Market[] markets)
+    public Market[] GetMarkets(MarketBase[] markets)
     {
         // Prepare a list
         List<Market> returningMarkets = new List<Market>();

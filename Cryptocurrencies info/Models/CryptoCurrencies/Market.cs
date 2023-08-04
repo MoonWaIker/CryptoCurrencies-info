@@ -8,7 +8,7 @@ public class Market
     [JsonProperty("priceUsd")]
     public decimal Price { get; set; }
 
-    public string Logo { get; set; } = "";
+    public string? Logo { get; set; } = "";
 
     [JsonProperty("baseSymbol")]
     public string Base { get; set; } = "";
@@ -18,5 +18,5 @@ public class Market
 
     public string Trust { get; set; } = "";
 
-    public string Link { get; set; } = "";
+    public string? Link { get; set; } = "";
 }
