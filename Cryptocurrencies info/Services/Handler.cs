@@ -1,15 +1,21 @@
-﻿public class Handler
-{
-    public readonly CoinMarket coinMarket;
-    public readonly Processing processing;
-    public readonly IConnection connection;
-    public readonly CoinGecko coinGecko;
+﻿using Cryptocurrencies_info.Services.CryptoCurrencies;
+using Cryptocurrencies_info.Services.DataBase;
 
-    public Handler(CoinMarket coinMarket, Processing processing, IConnection connection, CoinGecko coinGecko)
+namespace Cryptocurrencies_info.Services
+{
+    public class Handler
     {
-        this.coinMarket = coinMarket;
-        this.processing = processing;
-        this.connection = connection;
-        this.coinGecko = coinGecko;
+        public readonly CoinMarket coinMarket;
+        public readonly Processing processing;
+        public readonly IConnection connection;
+        public readonly CoinGecko coinGecko;
+
+        public Handler(CoinMarket coinMarket, Processing processing, IConnection connection, CoinGecko coinGecko)
+        {
+            this.coinMarket = coinMarket;
+            this.processing = processing;
+            this.connection = connection;
+            this.coinGecko = coinGecko;
+        }
     }
 }

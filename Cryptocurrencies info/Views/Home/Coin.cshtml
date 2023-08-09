@@ -1,4 +1,5 @@
-﻿@model (Coin, Market[])
+﻿@using Cryptocurrencies_info.Models.Cryptocurrencies;
+@model (Coin, Market[])
 
 @{
     ViewData["Title"] = "Coin";
@@ -58,18 +59,25 @@
        return 2;
     })))
     {
-        <img src="@collapse.First().Logo" />
+        <img src="@collapse.First().Logo" alt="marketLogo" />
         <details>
             <summary>
                 @collapse.Key
             </summary>
             <table class="table">
-                <tr><td>Market</td><td>Base</td><td>Target</td><td>Price</td><td>Trust status</td></tr>
+                <caption>Table of markets</caption>
+                <tr>
+                    <th>Market</th>
+                    <th>Base</th>
+                    <th>Target</th>
+                    <th>Price</th>
+                    <th>Trust status</th>
+                </tr>
                 @foreach (var market in collapse)
                 {
                     <tr>
                         <td>
-                            <a @(!string.IsNullOrEmpty(market.Link) ? $"href={market.Link}" : "")>
+                            <a @(!string.IsNullOrEmpty(market.Link) ? $"href={market.Link}" : string.Empty)>
                                 @market.Name
                             </a>
                         </td>

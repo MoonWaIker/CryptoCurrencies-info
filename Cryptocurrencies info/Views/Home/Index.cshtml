@@ -6,7 +6,14 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <table class="table">
-        <tr><td>Rank</td><td>Name</td><td>Current price</td><td>Price changing in percentage for 24h</td><td>Volume</td></tr>
+        <caption>Caption of coins</caption>
+        <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Current price</th>
+            <th>Price changing in percentage for 24h</th>
+            <th>Volume</th>
+        </tr>
         @foreach (var coin in Model)
         {
             <tr>

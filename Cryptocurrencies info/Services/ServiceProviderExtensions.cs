@@ -1,30 +1,37 @@
-﻿public static class ServiceProviderExtensions
+﻿using System.Data;
+using Cryptocurrencies_info.Services.CryptoCurrencies;
+using Cryptocurrencies_info.Services.DataBase;
+
+namespace Cryptocurrencies_info.Services
 {
-    // Providers dictionary
-    private static readonly Dictionary<string, Type> databaseProviders = new()
+    public static class ServiceProviderExtensions
+    {
+        // Providers dictionary
+        private static readonly Dictionary<string, Type> databaseProviders = new()
         {
             { "postgre", typeof(PostgreSql) },
             { "microsoft", typeof(MsSql) }
             // Add more entries for other providers as needed
         };
 
-    public static void AddServices(this IServiceCollection services)
-    {
-        // Building service provider
-        IServiceProvider serviceProvider = services.BuildServiceProvider();
+        public static void AddServices(this IServiceCollection services)
+        {
+            // Building service provider
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
 
-        // Getting config
-        IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
-        string databaseProvider = (configuration.GetValue<string>("provider") ?? throw new ArgumentNullException("Provider must be not null"))
-        .ToLowerInvariant();
+            // Getting config
+            IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            string databaseProvider = (configuration.GetValue<string>("provider") ?? throw new NoNullAllowedException(nameof(databaseProvider)))
+            .ToLowerInvariant();
 
-        // Getting the type of the database provider based on the configuration value
-        services.AddTransient(typeof(IConnection), databaseProviders[databaseProvider]);
+            // Getting the type of the database provider based on the configuration value
+            _ = services.AddTransient(typeof(IConnection), databaseProviders[databaseProvider]);
 
-        // Adding other services
-        services.AddTransient<CoinMarket>();
-        services.AddTransient<Processing>();
-        services.AddTransient<CoinGecko>();
-        services.AddTransient<Handler>();
+            // Adding other services
+            _ = services.AddTransient<CoinMarket>();
+            _ = services.AddTransient<Processing>();
+            _ = services.AddTransient<CoinGecko>();
+            _ = services.AddTransient<Handler>();
+        }
     }
 }

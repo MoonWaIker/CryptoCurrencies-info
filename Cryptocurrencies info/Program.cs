@@ -1,3 +1,6 @@
+using Cryptocurrencies_info.Services;
+using Cryptocurrencies_info.Services.CryptoCurrencies;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,11 +12,10 @@ builder.Configuration.AddJsonFile("dbsettings.json");
 // Add additional services
 builder.Services.AddServices();
 
-var app = builder.Build();
-
 // Getting service and run async
-CoinGecko coinGecko = app.Services.GetService<CoinGecko>() ?? throw new SystemException();
-Task parser = Task.Run(coinGecko.FindMarkets);
+builder.Services.AddHostedService<CoinGecko>();
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
