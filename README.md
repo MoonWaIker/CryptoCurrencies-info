@@ -6,7 +6,7 @@ related to cryptocurrencies.
 To implement the program, I used the next stack:
 * ASP.NET Core
 * ADO.NET
-* MSSQL\PostgreSQL (you can switch as you need)
+* MSSQL\PostgreSQL (you can switch for you need)
 * C# Language
 * .Net Core 7
 * [CoinCap API](https://docs.coincap.io/)
@@ -14,6 +14,8 @@ To implement the program, I used the next stack:
 * RestSharp
 * Newtonsoft.JSON
 * Git
+
+At now the MSSQL provider class looks bad, cause don't have access to windows to fix it
 
 Also I followed next patterns:
 * OOP
@@ -60,7 +62,6 @@ method and possible commission).
 * Support for multiple localizations.
 
 ## Task Checklist
-- [ ] High-performance logging
 - [ ] MediatR
 - [ ] SOLID
 - [ ] EntityFramework Core

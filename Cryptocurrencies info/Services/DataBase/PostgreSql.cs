@@ -16,6 +16,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         {
             // Initialize logger
             this.logger = logger;
+
             // Set configurations
             string host = configuration.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(configuration), "Host must be not null");
             int? port = configuration.GetValue<int>("port");
@@ -43,8 +44,10 @@ namespace Cryptocurrencies_info.Services.DataBase
 
             // Initialize query
             using NpgsqlCommand cmd = new(@$"INSERT INTO {$"\"{tableName}\""} (Name, Base, Target, Trust, Link, Logo)
-        OVERRIDING SYSTEM VALUE
-        VALUES {values};", connection);
+        VALUES {values}
+        ON CONFLICT (name, base, target)
+        DO
+        UPDATE SET trust = EXCLUDED.trust, link = EXCLUDED.link, logo = EXCLUDED.logo;", connection);
             cmd.Transaction = connection.BeginTransaction();
 
             // Adding mvalues of markets
@@ -63,16 +66,17 @@ namespace Cryptocurrencies_info.Services.DataBase
                 _ = cmd.ExecuteNonQuery();
                 cmd.Transaction.Commit();
             }
+            // Rollback
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, nameof(ex));
+                logger.LogError(ex.Message, ex);
                 try
                 {
                     cmd.Transaction.Rollback();
                 }
                 catch (Exception exRollback)
                 {
-                    logger.LogError(exRollback.Message, nameof(ex));
+                    logger.LogError(exRollback.Message, exRollback);
                 }
             }
         }
@@ -80,10 +84,15 @@ namespace Cryptocurrencies_info.Services.DataBase
         // Delete all data in sql
         public void RefreshTable()
         {
+            // Initializing connection
             using NpgsqlConnection connection = new(connectionString);
             connection.Open();
+
+            // Initializing command
             using NpgsqlCommand cmd = new($"TRUNCATE TABLE \"{tableName}\";", connection);
             cmd.Transaction = connection.BeginTransaction();
+
+            // Execute
             try
             {
                 _ = cmd.ExecuteNonQuery();
@@ -91,14 +100,15 @@ namespace Cryptocurrencies_info.Services.DataBase
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, nameof(ex));
+                logger.LogError(ex.Message, ex);
+                // Rollback
                 try
                 {
                     cmd.Transaction.Rollback();
                 }
                 catch (Exception exRollback)
                 {
-                    logger.LogError(exRollback.Message, nameof(ex));
+                    logger.LogError(exRollback.Message, exRollback);
                 }
             }
         }
@@ -155,7 +165,7 @@ namespace Cryptocurrencies_info.Services.DataBase
             }
             catch (Exception ex)
             {
-                logger.LogError(ex.Message, nameof(ex));
+                logger.LogError(ex.Message, ex);
                 throw;
             }
         }

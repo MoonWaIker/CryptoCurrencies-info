@@ -55,7 +55,13 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                     // Replenish database, if allright
                     if (response.IsSuccessful)
                     {
-                        if (response.Content is null || JObject.Parse(response.Content)["tickers"].IsNullOrEmpty())
+                        if (JObject.Parse(response.Content!)["tickers"]!
+                        .Where(ticker =>
+                            ticker["market"]?["name"]?.Type is not JTokenType.Null &&
+                            ticker["base"]?.Type is not JTokenType.Null &&
+                            ticker["target"]?.Type is not JTokenType.Null &&
+                            ticker["trust_score"]?.Type is not JTokenType.Null)
+                            .IsNullOrEmpty())
                         {
                             break;
                         }
