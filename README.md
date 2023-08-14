@@ -9,8 +9,8 @@ To implement the program, I used the next stack:
 * MSSQL\PostgreSQL (you can switch as you need)
 * C# Language
 * .Net Core 7
-* CoinCap API: https://docs.coincap.io/
-* CoinGecko API: https://www.coingecko.com/en/api/documentation
+* [CoinCap API](https://docs.coincap.io/)
+* [CoinGecko API](https://www.coingecko.com/en/api/documentation)
 * RestSharp
 * Newtonsoft.JSON
 * Git
@@ -18,7 +18,6 @@ To implement the program, I used the next stack:
 Also I followed next patterns:
 * OOP
 * MVC
-* SOLID
 * NULL Pattern
 
 For supporting maintainability I use following scanners:
@@ -29,9 +28,11 @@ For supporting maintainability I use following scanners:
 * SonarCloud
 
 At the future I wanna to add next features:
+* SOLID
 * MediatR
 * EntityFramework Core
 * NUnit
+* [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection)
 * Azure - at now, it published in github, but in the future I'll consider to publish here
 * Angular
 
@@ -57,3 +58,21 @@ other).
 method and possible commission).
 * Light / dark theme support.
 * Support for multiple localizations.
+
+## Task Checklist
+- [ ] High-performance logging
+- [ ] MediatR
+- [ ] SOLID
+- [ ] EntityFramework Core
+- [ ] [Entity Types](https://learn.microsoft.com/en-us/ef/core/modeling/entity-types?tabs=data-annotations)
+- [ ] NUnit
+- [ ] [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection)
+- [ ] Azure
+- [ ] ASP.NET Core attributes
+- [ ] Angular
+- [ ] Displaying quote charts for currencies
+- [ ] Page in which you can convert one currency to another
+- [ ] Light / dark theme support
+- [ ] Support for multiple localizations
+- [ ] Make looks better
+- [ ] Check for bugs, errors and etc.

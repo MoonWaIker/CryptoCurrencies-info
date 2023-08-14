@@ -1,13 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace Cryptocurrencies_info.Models.Cryptocurrencies
 {
     public class Coin
     {
+        [Range(1, int.MaxValue)]
         [JsonProperty("rank")]
         public int Rank { get; set; }
+        [MinLength(1)]
         [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
+        [MinLength(1)]
         [JsonProperty("id")]
         public string Id { get; set; } = string.Empty;
         [JsonProperty("priceUsd")]

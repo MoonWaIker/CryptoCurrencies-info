@@ -2,7 +2,7 @@
 
 namespace Cryptocurrencies_info.Services.CryptoCurrencies
 {
-    public class Processing
+    public sealed class Processing
     {
         private const int size = 100;
         private readonly CoinMarket coinMarket;
@@ -29,6 +29,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                 .Take(size),
                 PageNumber = pageNumber,
                 MaxPages = (coins.Length / size) - 1,
+                SearchString = searchString,
                 Size = size
             };
         }

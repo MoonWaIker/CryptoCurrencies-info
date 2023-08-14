@@ -8,7 +8,7 @@ using JsonException = Newtonsoft.Json.JsonException;
 
 namespace Cryptocurrencies_info.Services.CryptoCurrencies
 {
-    public class CoinMarket
+    public class CoinMarket : IDisposable
     {
         private const int maxCount = 2000;
         private readonly RestClient client = new("https://api.coincap.io/v2");
@@ -18,6 +18,18 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         public CoinMarket(IConnection connection)
         {
             this.connection = connection;
+        }
+
+        // Garbage collectors
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            client.Dispose();
         }
 
         // Get all coins
@@ -83,7 +95,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         {
             // Initialization
             // Markets from CoinCap
-            Market[] markets = GetMarketsList(coinId);
+            IEnumerable<Market> markets = GetMarketsList(coinId);
 
             // Markets from SQL
             Market[] marketSQL = connection.GetMarkets(markets
@@ -92,8 +104,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                     Name = market.Name,
                     Base = market.Base,
                     Target = market.Target,
-                })
-                .ToArray());
+                }));
 
             return marketSQL
                 .Join(markets,
@@ -126,15 +137,17 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Get markets list with price from CoinCap
-        private Market[] GetMarketsList(string coinId)
+        private IEnumerable<Market> GetMarketsList(string coinId)
         {
             RestRequest request = new RestRequest($"/assets/{coinId}/markets", Method.Get).AddParameter("limit", maxCount);
             RestResponse response = client.Execute(request);
             return response.IsSuccessful
                 ? JObject.Parse(response.Content!)["data"]!
-                    .Where(market => market["priceUsd"]?.Type is not JTokenType.Null)
+                    .Where(market => market["exchangeId"]?.Type is not JTokenType.Null &&
+                    market["priceUsd"]?.Type is not JTokenType.Null &&
+                    market["baseSymbol"]?.Type is not JTokenType.Null &&
+                    market["quoteSymbol"]?.Type is not JTokenType.Null)
                     .Select(market => market.ToObject<Market>()!)
-                    .ToArray()
                 : throw new JsonException();
         }
     }

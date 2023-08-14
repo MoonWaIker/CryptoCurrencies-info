@@ -1,3 +1,4 @@
+using System.Data;
 using Cryptocurrencies_info.Models.Cryptocurrencies;
 using Cryptocurrencies_info.Models.DataBase;
 using Npgsql;
@@ -9,9 +10,13 @@ namespace Cryptocurrencies_info.Services.DataBase
         // Hardcodes
         private const string tableName = "CoinMarket";
         private readonly string connectionString;
+        private readonly ILogger<PostgreSql> logger;
 
-        public PostgreSql(IConfiguration configuration)
+        public PostgreSql(IConfiguration configuration, ILogger<PostgreSql> logger)
         {
+            // Initialize logger
+            this.logger = logger;
+            // Set configurations
             string host = configuration.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(configuration), "Host must be not null");
             int? port = configuration.GetValue<int>("port");
             string? username = configuration.GetValue<string>("username");
@@ -26,66 +31,85 @@ namespace Cryptocurrencies_info.Services.DataBase
         }
 
         // Add markets to sql
-        public void AddMarkets(Market[] markets)
+        public async Task AddMarkets(Market[] markets)
         {
+            // Opening connection
+            using NpgsqlConnection connection = new(connectionString);
+            await connection.OpenAsync();
+
+            // Initialize values
+            string values = string.Join(',', markets
+            .Select((market, index) => $"(@name{index}, @base{index}, @target{index}, @trust{index}, @link{index}, @logo{index})"));
+
+            // Initialize query
+            using NpgsqlCommand cmd = new(@$"INSERT INTO {$"\"{tableName}\""} (Name, Base, Target, Trust, Link, Logo)
+        OVERRIDING SYSTEM VALUE
+        VALUES {values};", connection);
+            cmd.Transaction = connection.BeginTransaction();
+
+            // Adding mvalues of markets
+            for (int i = 0; i < markets.Length; i++)
+            {
+                _ = cmd.Parameters.AddWithValue($"@name{i}", markets[i].Name);
+                _ = cmd.Parameters.AddWithValue($"@base{i}", markets[i].Base);
+                _ = cmd.Parameters.AddWithValue($"@target{i}", markets[i].Target);
+                _ = cmd.Parameters.AddWithValue($"@trust{i}", markets[i].Trust);
+                _ = cmd.Parameters.AddWithValue($"@link{i}", markets[i].Link ?? string.Empty);
+                _ = cmd.Parameters.AddWithValue($"@logo{i}", markets[i].Logo ?? string.Empty);
+            }
             try
             {
-                // Initialize values
-                string values = string.Join(',', markets
-                .Select((market, index) => $"(@name{index}, @base{index}, @target{index}, @trust{index}, @link{index}, @logo{index})"));
-
-                // Opening connection
-                using NpgsqlConnection connection = new(connectionString);
-                connection.Open();
-
-                // Initialize query
-                using NpgsqlCommand cmd = new(@$"INSERT INTO {$"\"{tableName}\""} (Name, Base, Target, Trust, Link, Logo)
-            OVERRIDING SYSTEM VALUE
-            VALUES {values};", connection);
-
-                // Adding mvalues of markets
-                for (int i = 0; i < markets.Length; i++)
-                {
-                    _ = cmd.Parameters.AddWithValue($"@name{i}", markets[i].Name);
-                    _ = cmd.Parameters.AddWithValue($"@base{i}", markets[i].Base);
-                    _ = cmd.Parameters.AddWithValue($"@target{i}", markets[i].Target);
-                    _ = cmd.Parameters.AddWithValue($"@trust{i}", markets[i].Trust);
-                    _ = cmd.Parameters.AddWithValue($"@link{i}", markets[i].Link ?? string.Empty);
-                    _ = cmd.Parameters.AddWithValue($"@logo{i}", markets[i].Logo ?? string.Empty);
-                }
-
                 // Execute
                 _ = cmd.ExecuteNonQuery();
+                cmd.Transaction.Commit();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                logger.LogError(ex.Message, nameof(ex));
+                try
+                {
+                    cmd.Transaction.Rollback();
+                }
+                catch (Exception exRollback)
+                {
+                    logger.LogError(exRollback.Message, nameof(ex));
+                }
             }
         }
 
         // Delete all data in sql
         public void RefreshTable()
         {
+            using NpgsqlConnection connection = new(connectionString);
+            connection.Open();
+            using NpgsqlCommand cmd = new($"TRUNCATE TABLE \"{tableName}\";", connection);
+            cmd.Transaction = connection.BeginTransaction();
             try
             {
-                using NpgsqlConnection connection = new(connectionString);
-                connection.Open();
-                using NpgsqlCommand cmd = new($"TRUNCATE TABLE \"{tableName}\";", connection);
                 _ = cmd.ExecuteNonQuery();
+                cmd.Transaction.Commit();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                logger.LogError(ex.Message, nameof(ex));
+                try
+                {
+                    cmd.Transaction.Rollback();
+                }
+                catch (Exception exRollback)
+                {
+                    logger.LogError(exRollback.Message, nameof(ex));
+                }
             }
         }
 
         // Read and return data from sql
-        public Market[] GetMarkets(MarketBase[] markets)
+        public Market[] GetMarkets(IEnumerable<MarketBase> markets)
         {
             try
             {
-                // Doing query
-                // Initialize Names for where
+                // Initialize bases
+                // Initialize names for where
                 IEnumerable<IGrouping<string, MarketBase>> nameBase = markets
                     .GroupBy(market => market.Name);
 
@@ -127,12 +151,11 @@ namespace Cryptocurrencies_info.Services.DataBase
 
                 // Execute
                 using NpgsqlDataReader reader = cmd.ExecuteReader();
-
                 return IConnection.ParseMarkets(reader);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                logger.LogError(ex.Message, nameof(ex));
                 throw;
             }
         }

@@ -8,13 +8,13 @@ namespace Cryptocurrencies_info.Services.DataBase
     public interface IConnection
     {
         // Add markets to sql
-        public void AddMarkets(Market[] markets);
+        public Task AddMarkets(Market[] markets);
 
         // Delete all data in sql
         public void RefreshTable();
 
         // Read and return data from sql
-        public Market[] GetMarkets(MarketBase[] markets);
+        public Market[] GetMarkets(IEnumerable<MarketBase> markets);
 
         // Parse data from sql
         public static Market[] ParseMarkets(DbDataReader reader)
@@ -23,9 +23,7 @@ namespace Cryptocurrencies_info.Services.DataBase
             List<Market> result = new();
             while (reader.Read())
             {
-                try
-                {
-                    result.Add(
+                result.Add(
                     new Market
                     {
                         Name = (reader[0].ToString() ?? throw new SqlNullValueException()).Trim(),
@@ -35,11 +33,6 @@ namespace Cryptocurrencies_info.Services.DataBase
                         Link = (reader[4].ToString() ?? string.Empty).Trim(),
                         Logo = (reader[5].ToString() ?? string.Empty).Trim()
                     });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
             }
 
             return result.ToArray();

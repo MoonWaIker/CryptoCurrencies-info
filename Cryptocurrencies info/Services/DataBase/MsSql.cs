@@ -11,7 +11,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         private const string connectionString = "Server=(localdb)\\mssqllocaldb;Database=cryptocurrencies;Trusted_Connection=True;";
 
         // Add markets to sql
-        public void AddMarkets(Market[] markets)
+        public async Task AddMarkets(Market[] markets)
         {
             string marketStr = string.Join(",", markets
                 .Select(market => $"('{market.Name}', '{market.Base}', '{market.Target}', '{market.Trust}', '{market.Link}', '{market.Logo}')"));
@@ -23,26 +23,26 @@ namespace Cryptocurrencies_info.Services.DataBase
         WHERE NOT EXISTS (
             SELECT 1 FROM {tableName} WHERE Name = Market.Name AND Base = Market.Base AND Target = Market.Target
         );";
-            MakeQuery(query);
+            await MakeQuery(query);
         }
 
         // Delete all data in sql
         public void RefreshTable()
         {
-            MakeQuery($"TRUNCATE TABLE {tableName}");
+            _ = MakeQuery($"TRUNCATE TABLE {tableName}");
         }
 
         // Making a query
-        private static void MakeQuery(string sql)
+        private static async Task MakeQuery(string sql)
         {
             using SqlConnection connection = new(connectionString);
-            connection.Open();
+            await connection.OpenAsync();
             SqlCommand command = new(sql, connection);
-            _ = command.ExecuteNonQuery();
+            _ = await command.ExecuteNonQueryAsync();
         }
 
         // Read and return data from sql
-        public Market[] GetMarkets(MarketBase[] markets)
+        public Market[] GetMarkets(IEnumerable<MarketBase> markets)
         {
             // Initialize variables, which will be used for making a query
             string names = String.Join(" OR ", markets

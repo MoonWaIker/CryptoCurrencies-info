@@ -3,7 +3,7 @@ using Cryptocurrencies_info.Services.DataBase;
 
 namespace Cryptocurrencies_info.Services
 {
-    public class Handler
+    public sealed class Handler
     {
         public readonly CoinMarket coinMarket;
         public readonly Processing processing;

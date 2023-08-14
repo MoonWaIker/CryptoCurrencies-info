@@ -5,10 +5,10 @@
 
 <div class="text-center">
     <h1 class="display-4">Cryptocurrencies list</h1>
-    <form class="form-inline" asp-action="List">
+    <form class="form-inline">
         <div class="form-group">
             <input class="form-control-sm" name="searchString" placeholder="Search a coin">
-            <input type="submit" value="Find" class="btn btn-primary" />
+            <input type="submit" value="Find" class="btn btn-primary" onclick="@Url.Action("List", new { pageNumber = 0, searchString = ViewData["searchString"] })"/>
         </div>
     </form>
     <table class="table">
@@ -34,16 +34,16 @@
     <nav>
         <ul class="pagination">
             <li class="page-item @(Model.PageNumber > 0 ? "" : "disabled")">
-                <a class="page-link" href="@Url.Action("List", new { pageNumber = Model.PageNumber - 1 })">Previous</a>
+                <a class="page-link" href="@Url.Action("List", new { pageNumber = Model.PageNumber - 1, searchString = Model.SearchString })">Previous</a>
             </li>
             <li class="page-item @(Model.PageNumber > 0 ? "" : "disabled")">
-                <a class="page-link" href="@Url.Action("List", new { pageNumber = 0 })">First</a>
+                <a class="page-link" href="@Url.Action("List", new { pageNumber = 0, searchString = Model.SearchString })">First</a>
             </li>
             <li class="page-item @(Model.PageNumber < Model.MaxPages ? "" : "disabled")">
-                <a class="page-link" href="@Url.Action("List", new { pageNumber = Model.MaxPages })">Last</a>
+                <a class="page-link" href="@Url.Action("List", new { pageNumber = Model.MaxPages, searchString = Model.SearchString })">Last</a>
             </li>
             <li class="page-item @(Model.PageNumber < Model.MaxPages ? "" : "disabled")">
-                <a class="page-link" href="@Url.Action("List", new { pageNumber = Model.PageNumber + 1 })">Next</a>
+                <a class="page-link" href="@Url.Action("List", new { pageNumber = Model.PageNumber + 1, searchString = Model.SearchString })">Next</a>
             </li>
         </ul>
     </nav>
