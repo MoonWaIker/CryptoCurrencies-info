@@ -44,7 +44,7 @@ namespace Cryptocurrencies_info.Services.DataBase
 
             // Initialize query
             using NpgsqlCommand cmd = new(@$"INSERT INTO {$"\"{tableName}\""} (Name, Base, Target, Trust, Link, Logo)
-        SELECT DISTINCT Name, Base, Target, Trust, Link, Logo
+        SELECT DISTINCT ON (Name, Base, Target) Name, Base, Target, Trust, Link, Logo
         FROM (VALUES {values}) AS Market(Name, Base, Target, Trust, Link, Logo)
         ON CONFLICT (name, base, target)
         DO
