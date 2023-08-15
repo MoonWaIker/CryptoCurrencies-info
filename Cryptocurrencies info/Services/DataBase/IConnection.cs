@@ -8,23 +8,23 @@ namespace Cryptocurrencies_info.Services.DataBase
     public interface IConnection
     {
         // Add markets to sql
-        public Task AddMarkets(Market[] markets);
+        public Task AddMarkets(CoinGeckoMarket[] markets);
 
         // Delete all data in sql
         public void RefreshTable();
 
         // Read and return data from sql
-        public Market[] GetMarkets(IEnumerable<MarketBase> markets);
+        public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets);
 
         // Parse data from sql
-        public static Market[] ParseMarkets(DbDataReader reader)
+        public static CoinGeckoMarket[] ParseMarkets(DbDataReader reader)
         {
             // Reading rows
-            List<Market> result = new();
+            List<CoinGeckoMarket> result = new();
             while (reader.Read())
             {
                 result.Add(
-                    new Market
+                    new CoinGeckoMarket
                     {
                         Name = (reader[0].ToString() ?? throw new SqlNullValueException()).Trim(),
                         Base = (reader[1].ToString() ?? throw new SqlNullValueException()).Trim(),

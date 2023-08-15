@@ -11,7 +11,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         private const string connectionString = "Server=(localdb)\\mssqllocaldb;Database=cryptocurrencies;Trusted_Connection=True;";
 
         // Add markets to sql
-        public async Task AddMarkets(Market[] markets)
+        public async Task AddMarkets(CoinGeckoMarket[] markets)
         {
             string marketStr = string.Join(",", markets
                 .Select(market => $"('{market.Name}', '{market.Base}', '{market.Target}', '{market.Trust}', '{market.Link}', '{market.Logo}')"));
@@ -42,7 +42,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         }
 
         // Read and return data from sql
-        public Market[] GetMarkets(IEnumerable<MarketBase> markets)
+        public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets)
         {
             // Initialize variables, which will be used for making a query
             string names = String.Join(" OR ", markets

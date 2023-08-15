@@ -52,8 +52,16 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                 : throw new JsonException();
         }
 
-        // Get the coin
-        public Coin GetCoin(string coinId)
+        // Get coin with markets
+        public CoinFull GetCoin(string coinId)
+        {
+            Coin coin = GetCoinPrice(coinId);
+            Market[] markets = GetMarkets(coinId);
+            return new CoinFull(coin, markets);
+        }
+
+        // Get the coin from CoinCap
+        private Coin GetCoinPrice(string coinId)
         {
             RestRequest request = new($"/assets/{coinId}", Method.Get);
             RestResponse response = client.Execute(request);
@@ -91,14 +99,14 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Get markets of coin
-        public Market[] GetMarkets(string coinId)
+        private Market[] GetMarkets(string coinId)
         {
             // Initialization
             // Markets from CoinCap
-            IEnumerable<Market> markets = GetMarketsList(coinId);
+            IEnumerable<CoinCapMarket> markets = GetMarketsList(coinId);
 
             // Markets from SQL
-            Market[] marketSQL = connection.GetMarkets(markets
+            CoinGeckoMarket[] marketSQL = connection.GetMarkets(markets
                 .Select(market => new MarketBase
                 {
                     Name = market.Name,
@@ -137,7 +145,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Get markets list with price from CoinCap
-        private IEnumerable<Market> GetMarketsList(string coinId)
+        private IEnumerable<CoinCapMarket> GetMarketsList(string coinId)
         {
             RestRequest request = new RestRequest($"/assets/{coinId}/markets", Method.Get).AddParameter("limit", maxCount);
             RestResponse response = client.Execute(request);
@@ -147,7 +155,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                     market["priceUsd"]?.Type is not JTokenType.Null &&
                     market["baseSymbol"]?.Type is not JTokenType.Null &&
                     market["quoteSymbol"]?.Type is not JTokenType.Null)
-                    .Select(market => market.ToObject<Market>()!)
+                    .Select(market => market.ToObject<CoinCapMarket>()!)
                 : throw new JsonException();
         }
     }

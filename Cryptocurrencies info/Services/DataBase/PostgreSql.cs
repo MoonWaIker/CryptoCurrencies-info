@@ -32,7 +32,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         }
 
         // Add markets to sql
-        public async Task AddMarkets(Market[] markets)
+        public async Task AddMarkets(CoinGeckoMarket[] markets)
         {
             // Opening connection
             using NpgsqlConnection connection = new(connectionString);
@@ -115,7 +115,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         }
 
         // Read and return data from sql
-        public Market[] GetMarkets(IEnumerable<MarketBase> markets)
+        public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets)
         {
             try
             {

@@ -1,12 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Cryptocurrencies_info.Models.Cryptocurrencies
+namespace Cryptocurrencies_info.Models.DataBase
 {
-    public class Market
+    public class CoinGeckoMarket
     {
         [MinLength(1)]
         public string Name { get; set; } = string.Empty;
-        public decimal Price { get; set; }
         public string? Logo { get; set; } = string.Empty;
         [MinLength(1)]
         public string Base { get; set; } = string.Empty;

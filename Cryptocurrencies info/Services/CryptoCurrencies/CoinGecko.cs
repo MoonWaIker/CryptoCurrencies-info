@@ -1,4 +1,4 @@
-﻿using Cryptocurrencies_info.Models.Cryptocurrencies;
+﻿using Cryptocurrencies_info.Models.DataBase;
 using Cryptocurrencies_info.Services.DataBase;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -99,7 +99,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                             ticker["target"]?.Type is not JTokenType.Null &&
                             ticker["trust_score"]?.Type is not JTokenType.Null)
                         .Select(ticker =>
-                        new Market
+                        new CoinGeckoMarket
                         {
                             Name = (string)ticker["market"]!["name"]!,
                             Logo = (string)ticker["market"]!["logo"]!,

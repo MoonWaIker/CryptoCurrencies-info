@@ -34,7 +34,7 @@ namespace Cryptocurrencies_info.Controllers
         public IActionResult Coin(string id)
         {
             _logger.LogDebug("Directed to coin view", DateTime.Now);
-            return View((_handler.coinMarket.GetCoin(id), _handler.coinMarket.GetMarkets(id)));
+            return View(_handler.coinMarket.GetCoin(id));
         }
 
         public IActionResult Calculator()
