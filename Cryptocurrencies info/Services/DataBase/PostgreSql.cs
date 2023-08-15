@@ -1,5 +1,4 @@
 using System.Data;
-using Cryptocurrencies_info.Models.Cryptocurrencies;
 using Cryptocurrencies_info.Models.DataBase;
 using Npgsql;
 

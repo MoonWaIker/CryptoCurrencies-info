@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Cryptocurrencies_info.Models.DataBase
 {
     public class CoinGeckoMarket : MarketBase

@@ -1,6 +1,5 @@
 using System.Data.Common;
 using System.Data.SqlTypes;
-using Cryptocurrencies_info.Models.Cryptocurrencies;
 using Cryptocurrencies_info.Models.DataBase;
 
 namespace Cryptocurrencies_info.Services.DataBase

@@ -1,5 +1,4 @@
-﻿using Cryptocurrencies_info.Models.Cryptocurrencies;
-using Cryptocurrencies_info.Models.DataBase;
+﻿using Cryptocurrencies_info.Models.DataBase;
 using Microsoft.Data.SqlClient;
 
 namespace Cryptocurrencies_info.Services.DataBase
