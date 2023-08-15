@@ -57,11 +57,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         {
             Coin coin = GetCoinPrice(coinId);
             Market[] markets = GetMarkets(coinId);
-            return new CoinFull()
-            {
-                Coin = coin,
-                Markets = markets
-            };
+            return new CoinFull(coin, markets);
         }
 
         // Get the coin from CoinCap
