@@ -10,7 +10,7 @@ namespace Cryptocurrencies_info.Services
         private static readonly Dictionary<string, Type> databaseProviders = new()
         {
             { "postgre", typeof(PostgreSql) },
-            { "microsoft", typeof(MsSql) }
+            { "microsoft", typeof(MicrosoftSql) }
             // Add more entries for other providers as needed
         };
 

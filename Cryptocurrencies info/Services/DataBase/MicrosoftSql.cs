@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Cryptocurrencies_info.Services.DataBase
 {
-    public class MsSql : IConnection
+    public class MicrosoftSql : IConnection
     {
         // Hardcodes
         private const string tableName = "CoinMarket";
