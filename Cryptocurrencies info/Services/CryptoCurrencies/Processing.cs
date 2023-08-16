@@ -14,12 +14,11 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
 
         public object Pagination(int pageNumber, string searchString)
         {
-            Coin[] coins = coinMarket.GetCoinMarket();
+            IEnumerable<Coin> coins = coinMarket.GetCoinMarket();
             if (!string.IsNullOrEmpty(searchString))
             {
                 coins = coins
-                    .Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString))
-                    .ToArray();
+                    .Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString));
             }
 
             return new
@@ -28,7 +27,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                 .Skip(size * pageNumber)
                 .Take(size),
                 PageNumber = pageNumber,
-                MaxPages = (coins.Length / size) - 1,
+                MaxPages = (coins.Count() / size) - 1,
                 SearchString = searchString,
                 Size = size
             };

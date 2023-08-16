@@ -33,7 +33,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Get all coins
-        public Coin[] GetCoinMarket(int limit = maxCount)
+        public IEnumerable<Coin> GetCoinMarket(int limit = maxCount)
         {
             RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("limit", limit);
             RestResponse response = client.Execute(request);
@@ -48,7 +48,6 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                     coin["volumeUsd24Hr"]?.Type is not JTokenType.Null
                 )
                 .Select(coin => coin.ToObject<Coin>()!)
-                .ToArray()
                 : throw new JsonException();
         }
 

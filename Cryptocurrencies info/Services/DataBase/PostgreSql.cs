@@ -114,6 +114,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         }
 
         // Read and return data from sql
+        // TODO May you can do it async elaborate each line as task
         public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets)
         {
             try
