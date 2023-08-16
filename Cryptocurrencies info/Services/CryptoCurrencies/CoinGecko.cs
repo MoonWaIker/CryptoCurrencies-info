@@ -1,5 +1,5 @@
 ﻿using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.Interfaces;
+using Cryptocurrencies_info.Services.Interfaces.Connection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,10 +10,10 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
     public class CoinGecko : BackgroundService
     {
         private static readonly RestClient client = new("https://api.coingecko.com/api/v3/");
-        private readonly IConnection connection;
+        private readonly IConnectionFiller connection;
 
         // Constructor
-        public CoinGecko(IConnection connection)
+        public CoinGecko(IConnectionFiller connection)
         {
             this.connection = connection;
         }

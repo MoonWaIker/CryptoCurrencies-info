@@ -1,6 +1,7 @@
 ﻿using Cryptocurrencies_info.Models.Cryptocurrencies;
 using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.Interfaces;
+using Cryptocurrencies_info.Services.Interfaces.CoinMarket;
+using Cryptocurrencies_info.Services.Interfaces.Connection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -8,15 +9,15 @@ using JsonException = Newtonsoft.Json.JsonException;
 
 namespace Cryptocurrencies_info.Services.CryptoCurrencies
 {
-    public class CoinMarket : ICoinMarket, IDisposable
+    public class CoinMarket : ICoinMarketExtended, ICoinMarketBase, IDisposable
     {
         // Hardcodes
         private const int maxCount = 2000;
         private readonly RestClient client = new("https://api.coincap.io/v2");
-        private readonly IConnection connection;
+        private readonly IConnectionGetter connection;
 
         // Constructor
-        public CoinMarket(IConnection connection)
+        public CoinMarket(IConnectionGetter connection)
         {
             this.connection = connection;
         }

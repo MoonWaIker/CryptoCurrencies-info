@@ -1,11 +1,11 @@
 using System.Data;
 using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.Interfaces;
+using Cryptocurrencies_info.Services.Interfaces.Connection;
 using Npgsql;
 
 namespace Cryptocurrencies_info.Services.DataBase
 {
-    public class PostgreSql : IConnection
+    public class PostgreSql : IConnectionGetter, IConnectionFiller
     {
         // Hardcodes
         private const string tableName = "CoinMarket";
@@ -164,7 +164,7 @@ namespace Cryptocurrencies_info.Services.DataBase
 
                 // Execute
                 using NpgsqlDataReader reader = cmd.ExecuteReader();
-                return IConnection.ParseMarkets(reader);
+                return IConnectionGetter.ParseMarkets(reader);
             }
             catch (Exception ex)
             {

@@ -1,14 +1,15 @@
 ﻿using Cryptocurrencies_info.Models.Cryptocurrencies;
 using Cryptocurrencies_info.Services.Interfaces;
+using Cryptocurrencies_info.Services.Interfaces.CoinMarket;
 
 namespace Cryptocurrencies_info.Services.CryptoCurrencies
 {
     public sealed class BuisnessLogic : IBuisnessLogic
     {
         private const int size = 100;
-        private readonly ICoinMarket coinMarket;
+        private readonly ICoinMarketBase coinMarket;
 
-        public BuisnessLogic(ICoinMarket coinMarket)
+        public BuisnessLogic(ICoinMarketBase coinMarket)
         {
             this.coinMarket = coinMarket;
         }

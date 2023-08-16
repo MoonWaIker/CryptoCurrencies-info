@@ -2,15 +2,10 @@ using System.Data.Common;
 using System.Data.SqlTypes;
 using Cryptocurrencies_info.Models.DataBase;
 
-namespace Cryptocurrencies_info.Services.Interfaces
+namespace Cryptocurrencies_info.Services.Interfaces.Connection
 {
-    public interface IConnection
+    public interface IConnectionGetter
     {
-        // Add markets to sql
-        public Task AddMarkets(CoinGeckoMarket[] markets);
-
-        // Delete all data in sql
-        public void RefreshTable();
 
         // Read and return data from sql
         public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets);

@@ -1,10 +1,10 @@
 ﻿using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.Interfaces;
+using Cryptocurrencies_info.Services.Interfaces.Connection;
 using Microsoft.Data.SqlClient;
 
 namespace Cryptocurrencies_info.Services.DataBase
 {
-    public class MicrosoftSql : IConnection
+    public class MicrosoftSql : IConnectionGetter, IConnectionFiller
     {
         // Hardcodes
         private const string tableName = "CoinMarket";
@@ -63,7 +63,7 @@ namespace Cryptocurrencies_info.Services.DataBase
 
             // Read and initialize data
             using SqlDataReader reader = command.ExecuteReader();
-            return IConnection.ParseMarkets(reader);
+            return IConnectionGetter.ParseMarkets(reader);
         }
     }
 }

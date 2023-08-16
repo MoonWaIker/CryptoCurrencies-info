@@ -22,7 +22,7 @@ namespace Cryptocurrencies_info.Controllers
         public IActionResult Index()
         {
             _logger.LogDebug("Directed to index view", DateTime.Now);
-            return View(_handler.coinMarket.GetCoinMarket(10));
+            return View(_handler.coinMarketExtanded.GetCoinMarket(10));
         }
 
         public IActionResult List(int pageNumber, string searchString)
@@ -34,13 +34,13 @@ namespace Cryptocurrencies_info.Controllers
         public IActionResult Coin(string id)
         {
             _logger.LogDebug("Directed to coin view", DateTime.Now);
-            return View(_handler.coinMarket.GetCoin(id));
+            return View(_handler.coinMarketExtanded.GetCoin(id));
         }
 
         public IActionResult Calculator()
         {
             _logger.LogDebug("Directed to calculator view", DateTime.Now);
-            return View(_handler.coinMarket.GetCoinArray());
+            return View(_handler.coinMarketExtanded.GetCoinArray());
         }
 
         public IActionResult Privacy()

@@ -1,11 +1,10 @@
 using Cryptocurrencies_info.Models.Cryptocurrencies;
 
-namespace Cryptocurrencies_info.Services.Interfaces
+namespace Cryptocurrencies_info.Services.Interfaces.CoinMarket
 {
-    public interface ICoinMarket
+    public interface ICoinMarketExtended
     {
         // Get all coins
-        public IEnumerable<Coin> GetCoinMarket();
         public IEnumerable<Coin> GetCoinMarket(int limit);
 
         // Get coin with markets
