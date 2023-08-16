@@ -60,20 +60,14 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         // Get coin with markets
         public CoinFull GetCoin(string coinId)
         {
-            Coin coin = GetJustCoin(coinId);
-            Market[] markets = GetMarkets(coinId);
-            return new CoinFull(coin, markets);
-        }
-
-        // Get the coin from CoinCap
-        private Coin GetJustCoin(string coinId)
-        {
             RestRequest request = new($"/assets/{coinId}", Method.Get);
             RestResponse response = client.Execute(request);
-            return response.IsSuccessful
+            CoinFull coin = response.IsSuccessful
                     ? JObject.Parse(response.Content!)["data"]!
-                        .ToObject<Coin>() ?? throw new JsonSerializationException()
+                        .ToObject<CoinFull>() ?? throw new JsonSerializationException()
                     : throw new JsonException();
+            coin.Markets = GetMarkets(coinId);
+            return coin;
         }
 
         // Exchange coins
