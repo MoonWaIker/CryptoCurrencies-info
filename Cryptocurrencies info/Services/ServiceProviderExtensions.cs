@@ -29,7 +29,7 @@ namespace Cryptocurrencies_info.Services
 
             // Adding other services
             _ = services.AddTransient<CoinMarket>();
-            _ = services.AddTransient<Processing>();
+            _ = services.AddTransient<BusinessLogic>();
             _ = services.AddTransient<CoinGecko>();
             _ = services.AddTransient<Handler>();
         }

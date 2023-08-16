@@ -6,11 +6,12 @@ namespace Cryptocurrencies_info.Services
     public sealed class Handler
     {
         public readonly CoinMarket coinMarket;
-        public readonly Processing processing;
+        public readonly BusinessLogic processing;
         public readonly IConnection connection;
         public readonly CoinGecko coinGecko;
 
-        public Handler(CoinMarket coinMarket, Processing processing, IConnection connection, CoinGecko coinGecko)
+        // TODO Get services by service provider
+        public Handler(CoinMarket coinMarket, BusinessLogic processing, IConnection connection, CoinGecko coinGecko)
         {
             this.coinMarket = coinMarket;
             this.processing = processing;

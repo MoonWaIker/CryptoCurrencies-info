@@ -2,12 +2,12 @@
 
 namespace Cryptocurrencies_info.Services.CryptoCurrencies
 {
-    public sealed class Processing
+    public sealed class BusinessLogic
     {
         private const int size = 100;
         private readonly CoinMarket coinMarket;
 
-        public Processing(CoinMarket coinMarket)
+        public BusinessLogic(CoinMarket coinMarket)
         {
             this.coinMarket = coinMarket;
         }
