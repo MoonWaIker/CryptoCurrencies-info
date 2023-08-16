@@ -2,7 +2,7 @@ using System.Data.Common;
 using System.Data.SqlTypes;
 using Cryptocurrencies_info.Models.DataBase;
 
-namespace Cryptocurrencies_info.Services.DataBase
+namespace Cryptocurrencies_info.Services.Interfaces
 {
     public interface IConnection
     {

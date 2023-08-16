@@ -28,7 +28,7 @@ namespace Cryptocurrencies_info.Controllers
         public IActionResult List(int pageNumber, string searchString)
         {
             _logger.LogDebug("Directed to list view", DateTime.Now);
-            return View(_handler.processing.Pagination(pageNumber, searchString));
+            return View(_handler.buisnessLogic.Pagination(pageNumber, searchString));
         }
 
         public IActionResult Coin(string id)

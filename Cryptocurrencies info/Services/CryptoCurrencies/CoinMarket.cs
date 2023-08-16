@@ -1,6 +1,6 @@
 ﻿using Cryptocurrencies_info.Models.Cryptocurrencies;
 using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.DataBase;
+using Cryptocurrencies_info.Services.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -8,8 +8,9 @@ using JsonException = Newtonsoft.Json.JsonException;
 
 namespace Cryptocurrencies_info.Services.CryptoCurrencies
 {
-    public class CoinMarket : IDisposable
+    public class CoinMarket : ICoinMarket, IDisposable
     {
+        // Hardcodes
         private const int maxCount = 2000;
         private readonly RestClient client = new("https://api.coincap.io/v2");
         private readonly IConnection connection;
@@ -33,7 +34,12 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Get all coins
-        public IEnumerable<Coin> GetCoinMarket(int limit = maxCount)
+        public IEnumerable<Coin> GetCoinMarket()
+        {
+            return GetCoinMarket(maxCount);
+        }
+
+        public IEnumerable<Coin> GetCoinMarket(int limit)
         {
             RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("limit", limit);
             RestResponse response = client.Execute(request);
@@ -54,13 +60,13 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         // Get coin with markets
         public CoinFull GetCoin(string coinId)
         {
-            Coin coin = GetCoinPrice(coinId);
+            Coin coin = GetJustCoin(coinId);
             Market[] markets = GetMarkets(coinId);
             return new CoinFull(coin, markets);
         }
 
         // Get the coin from CoinCap
-        private Coin GetCoinPrice(string coinId)
+        private Coin GetJustCoin(string coinId)
         {
             RestRequest request = new($"/assets/{coinId}", Method.Get);
             RestResponse response = client.Execute(request);
@@ -71,9 +77,9 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Exchange coins
-        public decimal GetExchange(string from, string to, decimal amount)
+        public decimal GetExchange(string from, string target, decimal amount)
         {
-            RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("ids", $"{from},{to}");
+            RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("ids", $"{from},{target}");
             RestResponse response = client.Execute(request);
             return response.IsSuccessful
                 ? JObject.Parse(response.Content!)["data"]!

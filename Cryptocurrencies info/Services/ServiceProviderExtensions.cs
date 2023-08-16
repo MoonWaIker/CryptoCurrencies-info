@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Cryptocurrencies_info.Services.CryptoCurrencies;
 using Cryptocurrencies_info.Services.DataBase;
+using Cryptocurrencies_info.Services.Interfaces;
 
 namespace Cryptocurrencies_info.Services
 {
@@ -28,8 +29,8 @@ namespace Cryptocurrencies_info.Services
             _ = services.AddTransient(typeof(IConnection), databaseProviders[databaseProvider]);
 
             // Adding other services
-            _ = services.AddTransient<CoinMarket>();
-            _ = services.AddTransient<BuisnessLogic>();
+            _ = services.AddTransient(typeof(ICoinMarket), typeof(CoinMarket));
+            _ = services.AddTransient(typeof(IBuisnessLogic), typeof(BuisnessLogic));
             _ = services.AddTransient<CoinGecko>();
             _ = services.AddTransient<Handler>();
         }

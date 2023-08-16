@@ -1,5 +1,6 @@
 using System.Data;
 using Cryptocurrencies_info.Models.DataBase;
+using Cryptocurrencies_info.Services.Interfaces;
 using Npgsql;
 
 namespace Cryptocurrencies_info.Services.DataBase
@@ -11,13 +12,14 @@ namespace Cryptocurrencies_info.Services.DataBase
         private readonly string connectionString;
         private readonly ILogger<PostgreSql> logger;
 
-        public PostgreSql(IConfiguration configuration, ILogger<PostgreSql> logger)
+        public PostgreSql(IServiceProvider serviceProvider)
         {
             // Initialize logger
-            this.logger = logger;
+            logger = serviceProvider.GetRequiredService<ILogger<PostgreSql>>();
 
             // Set configurations
-            string host = configuration.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(configuration), "Host must be not null");
+            IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            string host = configuration.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(serviceProvider), "Host must be not null");
             int? port = configuration.GetValue<int>("port");
             string? username = configuration.GetValue<string>("username");
             string? database = configuration.GetValue<string>("database");
@@ -114,7 +116,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         }
 
         // Read and return data from sql
-        // TODO May you can do it async elaborate each line as task
+        // TODO May you can do it async and elaborate each line as task
         public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets)
         {
             try

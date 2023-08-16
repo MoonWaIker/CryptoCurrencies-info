@@ -1,21 +1,18 @@
-﻿using Cryptocurrencies_info.Services.CryptoCurrencies;
-using Cryptocurrencies_info.Services.DataBase;
+﻿using Cryptocurrencies_info.Services.Interfaces;
 
 namespace Cryptocurrencies_info.Services
 {
     public sealed class Handler
     {
-        public readonly CoinMarket coinMarket;
-        public readonly BuisnessLogic processing;
+        public readonly ICoinMarket coinMarket;
+        public readonly IBuisnessLogic buisnessLogic;
         public readonly IConnection connection;
-        public readonly CoinGecko coinGecko;
 
-        public Handler(CoinMarket coinMarket, BuisnessLogic processing, IConnection connection, CoinGecko coinGecko)
+        public Handler(IServiceProvider serviceProvider)
         {
-            this.coinMarket = coinMarket;
-            this.processing = processing;
-            this.connection = connection;
-            this.coinGecko = coinGecko;
+            coinMarket = serviceProvider.GetRequiredService<ICoinMarket>();
+            buisnessLogic = serviceProvider.GetRequiredService<IBuisnessLogic>();
+            connection = serviceProvider.GetRequiredService<IConnection>();
         }
     }
 }

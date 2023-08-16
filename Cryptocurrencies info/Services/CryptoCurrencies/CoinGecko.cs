@@ -1,5 +1,5 @@
 ﻿using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.DataBase;
+using Cryptocurrencies_info.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
