@@ -16,7 +16,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets);
 
         // Parse data from sql
-        public static CoinGeckoMarket[] ParseMarkets(DbDataReader reader)
+        protected static CoinGeckoMarket[] ParseMarkets(DbDataReader reader)
         {
             // Reading rows
             List<CoinGeckoMarket> result = new();
