@@ -18,7 +18,7 @@ namespace Cryptocurrencies_info.Controllers
             _handler = handler;
         }
 
-        // Do not forget to set atributes
+        // TODO Do not forget to set atributes
         public IActionResult Index()
         {
             _logger.LogDebug("Directed to index view", DateTime.Now);

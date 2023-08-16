@@ -50,7 +50,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         UPDATE SET trust = EXCLUDED.trust, link = EXCLUDED.link, logo = EXCLUDED.logo;", connection);
             cmd.Transaction = connection.BeginTransaction();
 
-            // Adding mvalues of markets
+            // Adding values of markets
             for (int i = 0; i < markets.Length; i++)
             {
                 _ = cmd.Parameters.AddWithValue($"@name{i}", markets[i].Name);
