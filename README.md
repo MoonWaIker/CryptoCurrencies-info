@@ -33,6 +33,7 @@ At the future I wanna to add next features:
 * SOLID
 * MediatR
 * EntityFramework Core
+* Docker
 * NUnit
 * [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection)
 * Azure - at now, it published in github, but in the future I'll consider to publish here
@@ -68,6 +69,7 @@ method and possible commission).
 - [ ] [Entity Types](https://learn.microsoft.com/en-us/ef/core/modeling/entity-types?tabs=data-annotations)
 - [ ] NUnit
 - [ ] [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection)
+- [ ] Docker
 - [ ] Azure
 - [ ] ASP.NET Core attributes
 - [ ] Angular
