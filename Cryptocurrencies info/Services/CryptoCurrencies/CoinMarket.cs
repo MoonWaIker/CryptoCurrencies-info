@@ -1,7 +1,7 @@
 ﻿using Cryptocurrencies_info.Models.Cryptocurrencies;
 using Cryptocurrencies_info.Models.DataBase;
 using Cryptocurrencies_info.Services.Interfaces.CoinMarket;
-using Cryptocurrencies_info.Services.Interfaces.Connection;
+using Cryptocurrencies_info.Services.Requests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -9,18 +9,11 @@ using JsonException = Newtonsoft.Json.JsonException;
 
 namespace Cryptocurrencies_info.Services.CryptoCurrencies
 {
-    public class CoinMarket : ICoinMarketExtended, ICoinMarketBase, IDisposable
+    public class CoinMarket : MainComponent, ICoinMarketExtended, ICoinMarketBase, IDisposable
     {
         // Hardcodes
         private const int maxCount = 2000;
         private readonly RestClient client = new("https://api.coincap.io/v2");
-        private readonly IConnectionGetter connection;
-
-        // Constructor
-        public CoinMarket(IConnectionGetter connection)
-        {
-            this.connection = connection;
-        }
 
         // Garbage collectors
         public void Dispose()
@@ -59,15 +52,15 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Get coin with markets
-        public CoinFull GetCoin(string coinId)
+        public CoinFull GetCoin(string coinId, CancellationToken cancellationToken)
         {
             RestRequest request = new($"/assets/{coinId}", Method.Get);
-            RestResponse response = client.Execute(request);
+            RestResponse response = client.Execute(request, cancellationToken);
             CoinFull coin = response.IsSuccessful
                     ? JObject.Parse(response.Content!)["data"]!
                         .ToObject<CoinFull>() ?? throw new JsonSerializationException()
                     : throw new JsonException();
-            coin.Markets = GetMarkets(coinId);
+            coin.Markets = GetMarkets(coinId, cancellationToken);
             return coin;
         }
 
@@ -99,20 +92,30 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Get markets of coin
-        private Market[] GetMarkets(string coinId)
+        private Market[] GetMarkets(string coinId, CancellationToken cancellationToken)
         {
+            if (mediator is null)
+            {
+                throw new ArgumentException("Mediator wasn't initialized", nameof(cancellationToken));
+            }
+
             // Initialization
             // Markets from CoinCap
             IEnumerable<CoinCapMarket> markets = GetMarketsList(coinId);
 
-            // Markets from SQL
-            CoinGeckoMarket[] marketSQL = connection.GetMarkets(markets
+            RequestFromDB request = new()
+            {
+                Markets = markets
                 .Select(market => new MarketBase
                 {
                     Name = market.Name,
                     Base = market.Base,
                     Target = market.Target,
-                }));
+                })
+            };
+
+            // Markets from SQL
+            IEnumerable<CoinGeckoMarket> marketSQL = mediator.Handle(request, cancellationToken).Result;
 
             return marketSQL
                 .Join(markets,

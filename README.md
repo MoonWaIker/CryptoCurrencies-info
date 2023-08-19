@@ -22,7 +22,7 @@ Also I followed next patterns:
 * MVC
 * NULL Pattern
 
-For supporting maintainability I use following scanners:
+To maintain clean code I use following scanners:
 * ESLint
 * OmniSharp
 * SonarLint
@@ -63,8 +63,9 @@ method and possible commission).
 * Support for multiple localizations.
 
 ## Task Checklist
-- [ ] MediatR
-- [ ] SOLID
+- [X] MediatR
+- [x] SOLID
+- [ ] Make normal Views
 - [ ] EntityFramework Core
 - [ ] [Entity Types](https://learn.microsoft.com/en-us/ef/core/modeling/entity-types?tabs=data-annotations)
 - [ ] NUnit

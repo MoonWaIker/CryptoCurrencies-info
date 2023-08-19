@@ -1,29 +1,29 @@
 ﻿using Cryptocurrencies_info.Models.Cryptocurrencies;
 using Cryptocurrencies_info.Services.Interfaces;
-using Cryptocurrencies_info.Services.Interfaces.CoinMarket;
+using Cryptocurrencies_info.Services.Requests;
 
 namespace Cryptocurrencies_info.Services.CryptoCurrencies
 {
-    public sealed class BuisnessLogic : IBuisnessLogic
+    public sealed class BuisnessLogic : MainComponent, IBuisnessLogic
     {
         private const int size = 100;
-        private readonly ICoinMarketBase coinMarket;
 
-        public BuisnessLogic(ICoinMarketBase coinMarket)
+        public PaginatedMarkets Pagination(int pageNumber, string searchString, CancellationToken cancellationToken)
         {
-            this.coinMarket = coinMarket;
-        }
+            if (mediator is null)
+            {
+                throw new ArgumentException("Mediator wasn't initialized", nameof(cancellationToken));
+            }
 
-        public object Pagination(int pageNumber, string searchString)
-        {
-            IEnumerable<Coin> coins = coinMarket.GetCoinMarket();
+            CoinMarketRequest request = new();
+            IEnumerable<Coin> coins = mediator.Handle(request, cancellationToken).Result;
             if (!string.IsNullOrEmpty(searchString))
             {
                 coins = coins
                     .Where(i => i.Name.Contains(searchString) || i.Id.Contains(searchString));
             }
 
-            return new
+            return new()
             {
                 Data = coins
                 .Skip(size * pageNumber)
@@ -35,5 +35,4 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
             };
         }
     }
-
 }

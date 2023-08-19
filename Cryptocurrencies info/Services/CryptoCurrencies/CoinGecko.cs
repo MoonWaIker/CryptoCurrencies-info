@@ -1,5 +1,6 @@
 ﻿using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.Interfaces.Connection;
+using Cryptocurrencies_info.Services.Interfaces.Main;
+using Cryptocurrencies_info.Services.Requests;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,26 +10,30 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
 {
     public class CoinGecko : BackgroundService
     {
-        private static readonly RestClient client = new("https://api.coingecko.com/api/v3/");
-        private readonly IConnectionFiller connection;
+        private readonly RestClient client = new("https://api.coingecko.com/api/v3/");
+        private readonly IHandler mediator;
 
+        // TODO Mediator must be passed as a service or manually?
         // Constructor
-        public CoinGecko(IConnectionFiller connection)
+        public CoinGecko(IHandler mediator)
         {
-            this.connection = connection;
+            this.mediator = mediator;
         }
 
         // Find markets
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            return Task.Run(() =>
             {
-                await ParseMarkets(cancellationToken: stoppingToken);
-            }
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    ParseMarkets(cancellationToken: stoppingToken);
+                }
+            }, stoppingToken);
         }
 
         // Parse markets
-        protected async Task ParseMarkets(CancellationToken cancellationToken)
+        private void ParseMarkets(CancellationToken cancellationToken)
         {
             // Initialization
             IEnumerable<string> marketsList = ParseMarketsId();
@@ -66,19 +71,19 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                             break;
                         }
 
-                        _ = AddToSql(response);
+                        AddToSql(response, cancellationToken);
                         page++;
                     }
                     else
                     {
-                        await Task.Delay(60000, cancellationToken);
+                        Thread.Sleep(60000);
                     }
                 }
             }
         }
 
         // Parse dictionary of Coins id and symbol
-        protected static IEnumerable<string> ParseMarketsId()
+        private IEnumerable<string> ParseMarketsId()
         {
             RestRequest request = new("/exchanges/list", Method.Get);
             RestResponse response = client.Execute(request);
@@ -90,9 +95,10 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Add to sql
-        protected async Task AddToSql(RestResponse response)
+        private void AddToSql(RestResponse response, CancellationToken cancellationToken)
         {
-            await connection.AddMarkets(JObject.Parse(response.Content!)["tickers"]!
+            // Initialize queries
+            CoinGeckoMarket[] markets = JObject.Parse(response.Content!)["tickers"]!
                         .Where(ticker =>
                             ticker["market"]?["name"]?.Type is not JTokenType.Null &&
                             ticker["base"]?.Type is not JTokenType.Null &&
@@ -108,7 +114,14 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                             Trust = (string)ticker["trust_score"]!,
                             Link = (string)ticker["trade_url"]!
                         })
-                        .ToArray());
+                        .ToArray();
+            DBPutRequest request = new()
+            {
+                CoinGeckoMarkets = markets
+            };
+
+            // Handle
+            _ = mediator.Handle(request, cancellationToken);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         private const string connectionString = "Server=(localdb)\\mssqllocaldb;Database=cryptocurrencies;Trusted_Connection=True;";
 
         // Add markets to sql
-        public async Task AddMarkets(CoinGeckoMarket[] markets)
+        public void AddMarkets(CoinGeckoMarket[] markets)
         {
             string marketStr = string.Join(",", markets
                 .Select(market => $"('{market.Name}', '{market.Base}', '{market.Target}', '{market.Trust}', '{market.Link}', '{market.Logo}')"));
@@ -23,26 +23,26 @@ namespace Cryptocurrencies_info.Services.DataBase
         WHERE NOT EXISTS (
             SELECT 1 FROM {tableName} WHERE Name = Market.Name AND Base = Market.Base AND Target = Market.Target
         );";
-            await MakeQuery(query);
+            MakeQuery(query);
         }
 
         // Delete all data in sql
         public void RefreshTable()
         {
-            _ = MakeQuery($"TRUNCATE TABLE {tableName}");
+            MakeQuery($"TRUNCATE TABLE {tableName}");
         }
 
         // Making a query
-        private static async Task MakeQuery(string sql)
+        private static void MakeQuery(string sql)
         {
             using SqlConnection connection = new(connectionString);
-            await connection.OpenAsync();
+            connection.Open();
             SqlCommand command = new(sql, connection);
-            _ = await command.ExecuteNonQueryAsync();
+            _ = command.ExecuteNonQuery();
         }
 
         // Read and return data from sql
-        public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets)
+        public IEnumerable<CoinGeckoMarket> GetMarkets(IEnumerable<MarketBase> markets)
         {
             // Initialize variables, which will be used for making a query
             string names = String.Join(" OR ", markets

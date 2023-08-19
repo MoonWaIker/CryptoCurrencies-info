@@ -8,10 +8,10 @@ namespace Cryptocurrencies_info.Services.Interfaces.Connection
     {
 
         // Read and return data from sql
-        public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets);
+        public IEnumerable<CoinGeckoMarket> GetMarkets(IEnumerable<MarketBase> markets);
 
         // Parse data from sql
-        protected static CoinGeckoMarket[] ParseMarkets(DbDataReader reader)
+        protected static IEnumerable<CoinGeckoMarket> ParseMarkets(DbDataReader reader)
         {
             // Reading rows
             List<CoinGeckoMarket> result = new();

@@ -8,7 +8,7 @@ namespace Cryptocurrencies_info.Services.DataBase
     public class PostgreSql : IConnectionGetter, IConnectionFiller
     {
         // Hardcodes
-        private const string tableName = "CoinMarket";
+        private readonly string tableName;
         private readonly string connectionString;
         private readonly ILogger<PostgreSql> logger;
 
@@ -19,6 +19,11 @@ namespace Cryptocurrencies_info.Services.DataBase
 
             // Set configurations
             IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+            // Tablename
+            tableName = configuration.GetValue<string>("tablename") ?? throw new ArgumentNullException(nameof(serviceProvider), "Table name must be not null");
+
+            // Connection string
             string host = configuration.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(serviceProvider), "Host must be not null");
             int? port = configuration.GetValue<int>("port");
             string? username = configuration.GetValue<string>("username");
@@ -33,24 +38,20 @@ namespace Cryptocurrencies_info.Services.DataBase
         }
 
         // Add markets to sql
-        public async Task AddMarkets(CoinGeckoMarket[] markets)
+        public void AddMarkets(CoinGeckoMarket[] markets)
         {
-            // Opening connection
-            using NpgsqlConnection connection = new(connectionString);
-            await connection.OpenAsync();
-
             // Initialize values
             string values = string.Join(',', markets
             .Select((market, index) => $"(@name{index}, @base{index}, @target{index}, @trust{index}, @link{index}, @logo{index})"));
 
-            // Initialize query
+            // Initializing
+            using NpgsqlConnection connection = new(connectionString);
             using NpgsqlCommand cmd = new(@$"INSERT INTO {$"\"{tableName}\""} (Name, Base, Target, Trust, Link, Logo)
         SELECT DISTINCT ON (Name, Base, Target) Name, Base, Target, Trust, Link, Logo
         FROM (VALUES {values}) AS Market(Name, Base, Target, Trust, Link, Logo)
         ON CONFLICT (name, base, target)
         DO
         UPDATE SET trust = EXCLUDED.trust, link = EXCLUDED.link, logo = EXCLUDED.logo;", connection);
-            cmd.Transaction = connection.BeginTransaction();
 
             // Adding values of markets
             for (int i = 0; i < markets.Length; i++)
@@ -62,6 +63,10 @@ namespace Cryptocurrencies_info.Services.DataBase
                 _ = cmd.Parameters.AddWithValue($"@link{i}", markets[i].Link ?? string.Empty);
                 _ = cmd.Parameters.AddWithValue($"@logo{i}", markets[i].Logo ?? string.Empty);
             }
+
+            // Opening connection
+            connection.Open();
+            cmd.Transaction = connection.BeginTransaction();
             try
             {
                 // Execute
@@ -116,8 +121,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         }
 
         // Read and return data from sql
-        // TODO May you can do it async and elaborate each line as task
-        public CoinGeckoMarket[] GetMarkets(IEnumerable<MarketBase> markets)
+        public IEnumerable<CoinGeckoMarket> GetMarkets(IEnumerable<MarketBase> markets)
         {
             try
             {

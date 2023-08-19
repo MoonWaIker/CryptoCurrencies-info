@@ -1,48 +1,72 @@
 ﻿using System.Diagnostics;
 using Cryptocurrencies_info.Models;
-using Cryptocurrencies_info.Services;
+using Cryptocurrencies_info.Models.Cryptocurrencies;
+using Cryptocurrencies_info.Services.Interfaces.Main;
+using Cryptocurrencies_info.Services.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cryptocurrencies_info.Controllers
 {
+    [Controller]
     public class HomeController : Controller
     {
-        private readonly Handler _handler;
+        private readonly IHandler mediator;
         private readonly ILogger<HomeController> _logger;
 
-        // Add logger
-        public HomeController(ILogger<HomeController> logger, Handler handler)
+        public HomeController(ILogger<HomeController> logger, IHandler mediator)
         {
             _logger = logger;
             _logger.LogDebug("HomeController has started", DateTime.Now);
-            _handler = handler;
+            this.mediator = mediator;
         }
 
-        // TODO Do not forget to set atributes
-        public IActionResult Index()
+        [Route("Home")]
+        public IActionResult Index(CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to index view", DateTime.Now);
-            return View(_handler.coinMarketExtanded.GetCoinMarket(10));
+            CoinMarketRequest request = new()
+            {
+                Limit = 10
+            };
+            IEnumerable<Coin> coinMarket = mediator.Handle(request, cancellationToken).Result;
+            return View(coinMarket);
         }
 
-        public IActionResult List(int pageNumber, string searchString)
+        [Route("[action]")]
+        public IActionResult List(int pageNumber, string searchString, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to list view", DateTime.Now);
-            return View(_handler.buisnessLogic.Pagination(pageNumber, searchString));
+            PaginationRequest request = new()
+            {
+                PageNumber = pageNumber,
+                SearchString = searchString
+            };
+            PaginatedMarkets page = mediator.Handle(request, cancellationToken).Result;
+            return View(page);
         }
 
-        public IActionResult Coin(string id)
+        [Route("Coin/{id?}")]
+        public IActionResult Coin(string id, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to coin view", DateTime.Now);
-            return View(_handler.coinMarketExtanded.GetCoin(id));
+            CoinRequest request = new()
+            {
+                Id = id
+            };
+            CoinFull coin = mediator.Handle(request,cancellationToken).Result;
+            return View(coin);
         }
 
-        public IActionResult Calculator()
+        [Route("[action]")]
+        public IActionResult Calculator(CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to calculator view", DateTime.Now);
-            return View(_handler.coinMarketExtanded.GetCoinArray());
+            CoinArrayRequest request = new();
+            string[] coinArray = mediator.Handle(request, cancellationToken).Result;
+            return View(coinArray);
         }
 
+        [Route("[action]")]
         public IActionResult Privacy()
         {
             _logger.LogDebug("Directed to privacy view", DateTime.Now);

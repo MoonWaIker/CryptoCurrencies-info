@@ -12,7 +12,7 @@ builder.Configuration.AddJsonFile("Properties/dbsettings.json");
 // Add additional services
 builder.Services.AddServices();
 
-// Getting service and run async
+// Getting service and run
 builder.Services.AddHostedService<CoinGecko>();
 
 var app = builder.Build();

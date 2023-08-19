@@ -2,8 +2,9 @@
     "provider": "Postgre",
     "host": "127.0.0.1",
     "port": 5432,
-    "username": "postgres",
+    "username": "cryptocurrencies",
     "database": "cryptocurrencies",
     "trustedConnection": true,
-    "errorDetail": true
+    "errorDetail": true,
+    "tablename": "coinmarket"
 }
