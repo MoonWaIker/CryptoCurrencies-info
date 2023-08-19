@@ -22,11 +22,11 @@ namespace Cryptocurrencies_info.Services
         public Handler(IServiceProvider serviceProvider)
         {
             coinMarketExtanded = serviceProvider.GetRequiredService<ICoinMarketExtended>();
-            coinMarketExtanded.SetMediator(this);
+            coinMarketExtanded.Mediator = this;
             coinMarketBase = serviceProvider.GetRequiredService<ICoinMarketBase>();
-            coinMarketBase.SetMediator(this);
+            coinMarketBase.Mediator = this;
             buisnessLogic = serviceProvider.GetRequiredService<IBuisnessLogic>();
-            buisnessLogic.SetMediator(this);
+            buisnessLogic.Mediator = this;
             connectionGetter = serviceProvider.GetRequiredService<IConnectionGetter>();
             connectionFiller = serviceProvider.GetRequiredService<IConnectionFiller>();
         }

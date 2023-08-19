@@ -10,13 +10,8 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
 
         public PaginatedMarkets Pagination(int pageNumber, string searchString, CancellationToken cancellationToken)
         {
-            if (mediator is null)
-            {
-                throw new ArgumentException("Mediator wasn't initialized", nameof(cancellationToken));
-            }
-
             CoinMarketRequest request = new();
-            IEnumerable<Coin> coins = mediator.Handle(request, cancellationToken).Result;
+            IEnumerable<Coin> coins = Mediator.Handle(request, cancellationToken).Result;
             if (!string.IsNullOrEmpty(searchString))
             {
                 coins = coins

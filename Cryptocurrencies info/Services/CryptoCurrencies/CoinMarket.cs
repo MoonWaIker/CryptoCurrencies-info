@@ -94,11 +94,6 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         // Get markets of coin
         private Market[] GetMarkets(string coinId, CancellationToken cancellationToken)
         {
-            if (mediator is null)
-            {
-                throw new ArgumentException("Mediator wasn't initialized", nameof(cancellationToken));
-            }
-
             // Initialization
             // Markets from CoinCap
             IEnumerable<CoinCapMarket> markets = GetMarketsList(coinId);
@@ -115,7 +110,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
             };
 
             // Markets from SQL
-            IEnumerable<CoinGeckoMarket> marketSQL = mediator.Handle(request, cancellationToken).Result;
+            IEnumerable<CoinGeckoMarket> marketSQL = Mediator.Handle(request, cancellationToken).Result;
 
             return marketSQL
                 .Join(markets,
