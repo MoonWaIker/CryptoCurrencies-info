@@ -20,6 +20,8 @@ At now the MSSQL provider class looks bad, cause don't have access to windows to
 Also I followed next patterns:
 * OOP
 * MVC
+* SOLID
+* MediatR
 * NULL Pattern
 
 To maintain clean code I use following scanners:
@@ -30,8 +32,6 @@ To maintain clean code I use following scanners:
 * SonarCloud
 
 At the future I wanna to add next features:
-* SOLID
-* MediatR
 * EntityFramework Core
 * Docker
 * NUnit
