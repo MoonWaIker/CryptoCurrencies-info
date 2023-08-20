@@ -42,7 +42,8 @@
     </dl>
 </div>
 
-<div>
+<div class="accordion" id="accordion">
+    <h1>Markets</h1>
     @foreach (var collapse in Model.Markets
     .GroupBy(market => market.Name)
     .OrderBy(market => market
@@ -59,35 +60,41 @@
        return 2;
     })))
     {
-        <img src="@collapse.First().Logo" alt="marketLogo" />
-        <details>
-            <summary>
-                @collapse.Key
-            </summary>
-            <table class="table">
-                <caption>Table of markets</caption>
-                <tr>
-                    <th>Market</th>
-                    <th>Base</th>
-                    <th>Target</th>
-                    <th>Price</th>
-                    <th>Trust status</th>
-                </tr>
-                @foreach (var market in collapse)
-                {
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@collapse.Key.Replace(" ", "")">
+                    <img src="@collapse.First().Logo" alt="marketLogo" />
+                    <a>
+                        @collapse.Key
+                    </a>
+                </button>
+            </h2>
+            <div id="@collapse.Key.Replace(" ", "")" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordion">
+                <table class="table accordion-body">
+                    <caption>Table of markets</caption>
                     <tr>
-                        <td>
-                            <a @(!string.IsNullOrEmpty(market.Link) ? $"href={market.Link}" : string.Empty)>
-                                @market.Name
-                            </a>
-                        </td>
-                        <td>@market.Base</td>
-                        <td>@market.Target</td>
-                        <td>@market.Price $</td>
-                        <td>@market.Trust</td>
+                        <th>Base</th>
+                        <th>Target</th>
+                        <th>Price</th>
+                        <th>Trust status</th>
+                        <th></th>
                     </tr>
-                }
-            </table>
-        </details>
+                    @foreach (var market in collapse)
+                    {
+                        <tr>
+                            <td>@market.Base</td>
+                            <td>@market.Target</td>
+                            <td>@market.Price $</td>
+                            <td>@market.Trust</td>
+                            <td>
+                                <a class="page-link" href=@market.Link>
+                                    @(!string.IsNullOrEmpty(market.Link) ? "Buy now" : "Link isn't available")
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
     }
 </div>

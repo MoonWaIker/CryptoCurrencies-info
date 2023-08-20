@@ -65,14 +65,17 @@ method and possible commission).
 ## Task Checklist
 - [X] MediatR
 - [x] SOLID
-- [ ] Make normal Views
+- [X] Make normal Views
 - [ ] EntityFramework Core
 - [ ] [Entity Types](https://learn.microsoft.com/en-us/ef/core/modeling/entity-types?tabs=data-annotations)
+- [ ] Release project
+- [ ] Docker
+- [ ] Deploy project
 - [ ] NUnit
 - [ ] [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection)
-- [ ] Docker
 - [ ] Azure
 - [ ] ASP.NET Core attributes
+- [ ] Recruit UI/UX to make views better
 - [ ] Angular
 - [ ] Additional data (Displaying quote charts for currencies, for ex.)
 - [ ] Page in which you can convert one currency to another

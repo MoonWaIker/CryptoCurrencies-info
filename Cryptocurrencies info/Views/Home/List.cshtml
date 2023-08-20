@@ -24,7 +24,7 @@
         {
             <tr>
                 <td>@coin.Rank</td>
-                <td><a asp-controller="Home" asp-action="Coin" asp-route-id="@coin.Id">@coin.Name</a></td>
+                <td><a class="page-link" asp-controller="Home" asp-action="Coin" asp-route-id="@coin.Id">@coin.Name</a></td>
                 <td>@coin.CurrentPrice $</td>
                 <td>@coin.PriceChangePercentage24h %</td>
                 <td>@coin.Volume $</td>
