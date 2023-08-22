@@ -27,7 +27,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         }
 
         // Delete all data in sql
-        public void RefreshTable()
+        public static void RefreshTable()
         {
             MakeQuery($"TRUNCATE TABLE {tableName}");
         }
