@@ -87,9 +87,11 @@
                             <td>@market.Price $</td>
                             <td>@market.Trust</td>
                             <td>
-                                <a class="page-link" href=@market.Link>
-                                    @(!string.IsNullOrEmpty(market.Link) ? "Buy now" : "Link isn't available")
-                                </a>
+                                <ul class="page-item @(string.IsNullOrEmpty(market.Link) ? "disabled" : string.Empty)">
+                                    <a class="page-link" href=@market.Link>
+                                        @(!string.IsNullOrEmpty(market.Link) ? "Buy now" : "Link isn't available")
+                                    </a>
+                                <ul>
                             </td>
                         </tr>
                     }
