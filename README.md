@@ -5,7 +5,8 @@ related to cryptocurrencies.
 
 To implement the program, I used the next stack:
 * ASP.NET Core
-* ADO.NET
+* EntityFramework Core
+* ADO.NET (at old sql class version)
 * MSSQL\PostgreSQL (you can switch for you need)
 * C# Language
 * .Net Core 7
@@ -32,7 +33,6 @@ To maintain clean code I use following scanners:
 * SonarCloud
 
 At the future I wanna to add next features:
-* EntityFramework Core
 * Docker
 * NUnit
 * [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection)
@@ -66,8 +66,8 @@ method and possible commission).
 - [X] MediatR
 - [x] SOLID
 - [X] Make normal Views
-- [ ] EntityFramework Core
-- [ ] [Entity Types](https://learn.microsoft.com/en-us/ef/core/modeling/entity-types?tabs=data-annotations)
+- [X] EntityFramework Core
+- [X] [Entity Types](https://learn.microsoft.com/en-us/ef/core/modeling/entity-types?tabs=data-annotations)
 - [ ] Release project
 - [ ] Docker
 - [ ] Deploy project

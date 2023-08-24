@@ -11,6 +11,7 @@ namespace Cryptocurrencies_info.Services.Interfaces.Connection
         public IEnumerable<CoinGeckoMarket> GetMarkets(IEnumerable<MarketBase> markets);
 
         // Parse data from sql
+        // TODO Delete this when MicrosoftSql will use EF instead ADO.NET
         protected static IEnumerable<CoinGeckoMarket> ParseMarkets(DbDataReader reader)
         {
             // Reading rows

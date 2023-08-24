@@ -101,12 +101,6 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
             RequestFromDB request = new()
             {
                 Markets = markets
-                .Select(market => new MarketBase
-                {
-                    Name = market.Name,
-                    Base = market.Base,
-                    Target = market.Target,
-                })
             };
 
             // Markets from SQL

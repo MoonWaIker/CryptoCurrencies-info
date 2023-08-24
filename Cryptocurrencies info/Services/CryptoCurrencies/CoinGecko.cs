@@ -98,6 +98,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         private void AddToSql(RestResponse response, CancellationToken cancellationToken)
         {
             // Initialize queries
+            // TODO Make it easier by json attributes and stuff
             CoinGeckoMarket[] markets = JObject.Parse(response.Content!)["tickers"]!
                         .Where(ticker =>
                             ticker["market"]?["name"]?.Type is not JTokenType.Null &&

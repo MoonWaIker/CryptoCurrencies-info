@@ -12,11 +12,12 @@ namespace Cryptocurrencies_info.Services
     public sealed class Handler : IHandler
     {
         // Objects
+        // TODO connection to db was replaced by service provider (mean at new query make new object), cause EF can add and update same objects once. But is possible other way?
+        // TODO can connection interfaces be as single?
+        private readonly IServiceProvider serviceProvider;
         private readonly ICoinMarketExtended coinMarketExtanded;
         private readonly ICoinMarketBase coinMarketBase;
         private readonly IBuisnessLogic buisnessLogic;
-        private readonly IConnectionGetter connectionGetter;
-        private readonly IConnectionFiller connectionFiller;
 
         // Constructor
         public Handler(IServiceProvider serviceProvider)
@@ -27,8 +28,7 @@ namespace Cryptocurrencies_info.Services
             coinMarketBase.Mediator = this;
             buisnessLogic = serviceProvider.GetRequiredService<IBuisnessLogic>();
             buisnessLogic.Mediator = this;
-            connectionGetter = serviceProvider.GetRequiredService<IConnectionGetter>();
-            connectionFiller = serviceProvider.GetRequiredService<IConnectionFiller>();
+            this.serviceProvider = serviceProvider;
         }
 
         // Mediator tasks
@@ -54,11 +54,13 @@ namespace Cryptocurrencies_info.Services
 
         Task IRequestHandler<DBPutRequest>.Handle(DBPutRequest request, CancellationToken cancellationToken)
         {
+            IConnectionFiller connectionFiller = serviceProvider.GetRequiredService<IConnectionFiller>();
             return Task.Run(() => connectionFiller.AddMarkets(request.CoinGeckoMarkets), cancellationToken);
         }
 
         Task<IEnumerable<CoinGeckoMarket>> IRequestHandler<RequestFromDB, IEnumerable<CoinGeckoMarket>>.Handle(RequestFromDB request, CancellationToken cancellationToken)
         {
+            IConnectionGetter connectionGetter = serviceProvider.GetRequiredService<IConnectionGetter>();
             return Task.FromResult(connectionGetter.GetMarkets(request.Markets));
         }
     }

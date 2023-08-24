@@ -5,6 +5,5 @@
     "username": "cryptocurrencies",
     "database": "cryptocurrencies",
     "trustedConnection": true,
-    "errorDetail": true,
-    "tablename": "coinmarket"
+    "errorDetail": true
 }
