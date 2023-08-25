@@ -98,23 +98,13 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         private void AddToSql(RestResponse response, CancellationToken cancellationToken)
         {
             // Initialize queries
-            // TODO Make it easier by json attributes and stuff
             CoinGeckoMarket[] markets = JObject.Parse(response.Content!)["tickers"]!
                         .Where(ticker =>
                             ticker["market"]?["name"]?.Type is not JTokenType.Null &&
                             ticker["base"]?.Type is not JTokenType.Null &&
                             ticker["target"]?.Type is not JTokenType.Null &&
                             ticker["trust_score"]?.Type is not JTokenType.Null)
-                        .Select(ticker =>
-                        new CoinGeckoMarket
-                        {
-                            Name = (string)ticker["market"]!["name"]!,
-                            Logo = (string)ticker["market"]!["logo"]!,
-                            Base = (string)ticker["base"]!,
-                            Target = (string)ticker["target"]!,
-                            Trust = (string)ticker["trust_score"]!,
-                            Link = (string)ticker["trade_url"]!
-                        })
+                        .Select(ticker => ticker.ToObject<CoinGeckoMarket>()!)
                         .ToArray();
             DBPutRequest request = new()
             {
