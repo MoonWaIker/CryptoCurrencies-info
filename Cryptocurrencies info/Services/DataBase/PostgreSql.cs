@@ -26,16 +26,16 @@ namespace Cryptocurrencies_info.Services.DataBase
 
             // Connection string
             string host = configuration.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(serviceProvider), "Host must be not null");
-            int? port = configuration.GetValue<int>("port");
+            int port = configuration.GetValue<int>("port");
             string? username = configuration.GetValue<string>("username");
             string? database = configuration.GetValue<string>("database");
-            bool? trustedConnection = configuration.GetValue<bool>("trustedConnection");
-            bool? errorDetail = configuration.GetValue<bool>("errorDetail");
-            connectionString = $"Host={host};{(port is not null ? $"Port={port};" : string.Empty)}" +
+            bool trustedConnection = configuration.GetValue<bool>("trustedConnection");
+            bool errorDetail = configuration.GetValue<bool>("errorDetail");
+            connectionString = $"Host={host};Port={port};" +
             $"{(username is not null ? $"Username={username};" : string.Empty)}" +
             $"{(database is not null ? $"Database={database};" : string.Empty)}" +
-            $"{(trustedConnection is not null ? $"Trust Server Certificate={trustedConnection};" : string.Empty)}" +
-            $"{(errorDetail is not null ? $"Include Error Detail={errorDetail};" : string.Empty)}";
+            $"Trust Server Certificate={trustedConnection};" +
+            $"Include Error Detail={errorDetail};";
 
             // Markets setting
             Markets = Set<CoinGeckoMarket>();
