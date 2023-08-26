@@ -54,6 +54,13 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         // Get coin with markets
         public CoinFull GetCoin(string coinId, CancellationToken cancellationToken)
         {
+            // Depency injection
+            if (!GetCoinArray().Contains(coinId))
+            {
+                throw new ArgumentException("ID isn't valid", nameof(coinId));
+            }
+
+            // Parsing
             RestRequest request = new($"/assets/{coinId}", Method.Get);
             RestResponse response = client.Execute(request, cancellationToken);
             CoinFull coin = response.IsSuccessful
@@ -67,6 +74,21 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         // Exchange coins
         public decimal GetExchange(string from, string target, decimal amount)
         {
+            // Depency injection
+            if (!GetCoinArray().Contains(from))
+            {
+                throw new ArgumentException("ID isn't valid", nameof(from));
+            }
+            if (!GetCoinArray().Contains(target))
+            {
+                throw new ArgumentException("ID isn't valid", nameof(target));
+            }
+            if (amount <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount), "ID isn't valid");
+            }
+
+            // Parsing
             RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("ids", $"{from},{target}");
             RestResponse response = client.Execute(request);
             return response.IsSuccessful

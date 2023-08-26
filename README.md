@@ -72,7 +72,7 @@ method and possible commission).
 - [ ] Docker
 - [ ] Deploy project
 - [ ] NUnit
-- [ ] [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection)
+- [X] [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection)
 - [ ] Azure
 - [ ] ASP.NET Core attributes
 - [ ] Recruit UI/UX to make views better

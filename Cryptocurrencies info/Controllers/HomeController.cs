@@ -36,25 +36,39 @@ namespace Cryptocurrencies_info.Controllers
         public IActionResult List(int pageNumber, string searchString, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to list view", DateTime.Now);
-            PaginationRequest request = new()
+            try
             {
-                PageNumber = pageNumber,
-                SearchString = searchString
-            };
-            PaginatedMarkets page = mediator.Handle(request, cancellationToken).Result;
-            return View(page);
+                PaginationRequest request = new()
+                {
+                    PageNumber = pageNumber,
+                    SearchString = searchString
+                };
+                PaginatedMarkets page = mediator.Handle(request, cancellationToken).Result;
+                return View(page);
+            }
+            catch (Exception ex)
+            {
+                return View("ControlledError", ex.Message);
+            }
         }
 
         [Route("Coin/{id?}")]
         public IActionResult Coin(string id, CancellationToken cancellationToken)
         {
-            _logger.LogDebug("Directed to coin view", DateTime.Now);
-            CoinRequest request = new()
+            try
             {
-                Id = id
-            };
-            CoinFull coin = mediator.Handle(request,cancellationToken).Result;
-            return View(coin);
+                _logger.LogDebug("Directed to coin view", DateTime.Now);
+                CoinRequest request = new()
+                {
+                    Id = id
+                };
+                CoinFull coin = mediator.Handle(request, cancellationToken).Result;
+                return View(coin);
+            }
+            catch (Exception ex)
+            {
+                return View("ControlledError", ex.Message);
+            }
         }
 
         [Route("[action]")]

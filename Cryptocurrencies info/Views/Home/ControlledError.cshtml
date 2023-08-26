@@ -1,0 +1,14 @@
+@model string
+
+<head>
+    <title>Error Message</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Error Message</h1>
+        <div class="alert alert-danger">
+            <p>@Model</p>
+        </div>
+        <input type="button" href="javascript:void(0);" onclick="history.go(-1);" value="Return" class="btn btn-primary"/>
+    </div>
+</body>
