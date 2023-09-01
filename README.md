@@ -75,7 +75,6 @@ method and possible commission).
 - [X] [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection)
 - [ ] Azure
 - [ ] ASP.NET Core attributes
-- [ ] Recruit UI/UX to make views better
 - [ ] Angular
 - [ ] Additional data (Displaying quote charts for currencies, for ex.)
 - [ ] Page in which you can convert one currency to another
