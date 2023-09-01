@@ -43,7 +43,7 @@
 </div>
 
 <div class="accordion" id="accordion">
-    @(Model.Markets.Length > 0 ? "<h1>Markets</h1>" : string.Empty)
+    <h1>@(Model.Markets.Length > 0 ? "Markets" : string.Empty)</h1>
     @foreach (var collapse in Model.Markets
     .GroupBy(market => market.Name)
     .OrderBy(market => market
