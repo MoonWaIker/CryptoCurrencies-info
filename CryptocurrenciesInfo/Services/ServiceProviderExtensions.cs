@@ -25,7 +25,7 @@ namespace Cryptocurrencies_info.Services
 
             // Getting config
             IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            string databaseProvider = (configuration.GetValue<string>("provider") ?? throw new NoNullAllowedException(nameof(databaseProvider)))
+            string databaseProvider = (configuration.GetSection("DataBase").GetValue<string>("provider") ?? throw new NoNullAllowedException(nameof(databaseProvider)))
             .ToLowerInvariant();
 
             // Getting the type of the database provider based on the configuration value

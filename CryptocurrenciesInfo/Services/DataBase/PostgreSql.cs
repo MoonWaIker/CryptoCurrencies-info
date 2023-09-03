@@ -13,17 +13,18 @@ namespace Cryptocurrencies_info.Services.DataBase
         {
             // Set configurations
             IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            var database = configuration.GetSection("DataBase");
 
             // Connection string
-            string host = configuration.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(serviceProvider), "Host must be not null");
-            int port = configuration.GetValue<int>("port");
-            string? username = configuration.GetValue<string>("username");
-            string? database = configuration.GetValue<string>("database");
-            bool trustedConnection = configuration.GetValue<bool>("trustedConnection");
-            bool errorDetail = configuration.GetValue<bool>("errorDetail");
+            string host = database.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(serviceProvider), "Host must be not null");
+            int port = database.GetValue<int>("port");
+            string? username = database.GetValue<string>("username");
+            string? databaseName = database.GetValue<string>("database");
+            bool trustedConnection = database.GetValue<bool>("trustedConnection");
+            bool errorDetail = database.GetValue<bool>("errorDetail");
             connectionString = $"Host={host};Port={port};" +
             $"{(username is not null ? $"Username={username};" : string.Empty)}" +
-            $"{(database is not null ? $"Database={database};" : string.Empty)}" +
+            $"{(databaseName is not null ? $"Database={databaseName};" : string.Empty)}" +
             $"Trust Server Certificate={trustedConnection};" +
             $"Include Error Detail={errorDetail};";
 

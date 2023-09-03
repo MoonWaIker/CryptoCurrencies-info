@@ -6,9 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Database settings
-builder.Configuration.AddJsonFile("Properties/dbsettings.json");
-
 // Add additional services
 builder.Services.AddServices();
 

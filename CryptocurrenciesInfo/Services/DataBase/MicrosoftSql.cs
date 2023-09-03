@@ -13,11 +13,12 @@ namespace Cryptocurrencies_info.Services.DataBase
         {
             // Set configurations
             IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            var database = configuration.GetSection("DataBase");
 
             // Connection string
-            string? database = configuration.GetValue<string>("database");
-            bool trustedConnection = configuration.GetValue<bool>("trustedConnection");
-            connectionString = @$"Server=(localdb)\mssqllocaldb;Database={database};Trusted_Connection={trustedConnection};";
+            string? databaseName = database.GetValue<string>("database");
+            bool trustedConnection = database.GetValue<bool>("trustedConnection");
+            connectionString = @$"Server=(localdb)\mssqllocaldb;Database={databaseName};Trusted_Connection={trustedConnection};";
 
             // Markets setting
             Markets = Set<CoinGeckoMarket>();
