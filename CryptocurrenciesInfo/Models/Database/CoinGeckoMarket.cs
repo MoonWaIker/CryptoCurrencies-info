@@ -12,11 +12,15 @@ namespace Cryptocurrencies_info.Models.DataBase
     {
         [JsonProperty("base")]
         public override string Base { get; set; } = string.Empty;
+
         [JsonProperty("target")]
         public override string Target { get; set; } = string.Empty;
+
         public string? Logo { get; set; } = string.Empty;
+
         [JsonProperty("trust_score")]
         public string Trust { get; set; } = string.Empty;
+
         [JsonProperty("trade_url")]
         public string? Link { get; set; } = string.Empty;
 
