@@ -22,7 +22,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
             }
 
             // Check for valid pageNumber
-            return pageNumber < 0 || pageNumber >= coins.Count() / size
+            return pageNumber < 0 || pageNumber > coins.Count() / size
                 ? throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number is out of range")
                 : new()
                 {
@@ -30,7 +30,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                 .Skip(size * pageNumber)
                 .Take(size),
                     PageNumber = pageNumber,
-                    MaxPages = (coins.Count() / size) - 1,
+                    MaxPages = coins.Count() / size,
                     SearchString = searchString,
                     Size = size
                 };
