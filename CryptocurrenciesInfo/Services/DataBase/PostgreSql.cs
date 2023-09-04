@@ -11,8 +11,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         public PostgreSql(IServiceProvider serviceProvider) : base(serviceProvider)
         {
             // Set configurations
-            IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            var database = configuration.GetSection("DataBase");
+            IConfigurationSection database = serviceProvider.GetRequiredService<IConfiguration>().GetSection("DataBase");
 
             // Connection string
             string host = database.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(serviceProvider), "Host must be not null");

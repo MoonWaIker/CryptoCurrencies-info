@@ -11,8 +11,7 @@ namespace Cryptocurrencies_info.Services.DataBase
         public MicrosoftSql(IServiceProvider serviceProvider) : base(serviceProvider)
         {
             // Set configurations
-            IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            var database = configuration.GetSection("DataBase");
+            IConfigurationSection database = serviceProvider.GetRequiredService<IConfiguration>().GetSection("DataBase");
 
             // Connection string
             string? databaseName = database.GetValue<string>("database");
