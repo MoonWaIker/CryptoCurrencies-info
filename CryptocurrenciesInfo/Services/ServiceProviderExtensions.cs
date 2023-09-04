@@ -1,12 +1,12 @@
 ﻿using System.Data;
-using Cryptocurrencies_info.Services.CryptoCurrencies;
-using Cryptocurrencies_info.Services.DataBase;
-using Cryptocurrencies_info.Services.Interfaces;
-using Cryptocurrencies_info.Services.Interfaces.CoinMarket;
-using Cryptocurrencies_info.Services.Interfaces.Connection;
-using Cryptocurrencies_info.Services.Interfaces.Main;
+using CryptocurrenciesInfo.Services.CryptoCurrencies;
+using CryptocurrenciesInfo.Services.DataBase;
+using CryptocurrenciesInfo.Services.Interfaces;
+using CryptocurrenciesInfo.Services.Interfaces.CoinMarket;
+using CryptocurrenciesInfo.Services.Interfaces.Connection;
+using CryptocurrenciesInfo.Services.Interfaces.Main;
 
-namespace Cryptocurrencies_info.Services
+namespace CryptocurrenciesInfo.Services
 {
     public static class ServiceProviderExtensions
     {

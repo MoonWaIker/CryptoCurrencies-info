@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Cryptocurrencies_info.Models.DataBase
+namespace CryptocurrenciesInfo.Models.DataBase
 {
     [Table("coinmarket")]
     [PrimaryKey(nameof(Name), nameof(Base), nameof(Target))]

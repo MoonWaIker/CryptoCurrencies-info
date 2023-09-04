@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Cryptocurrencies_info.Models.DataBase
+namespace CryptocurrenciesInfo.Models.DataBase
 {
     public class CoinCapMarket : MarketBase
     {

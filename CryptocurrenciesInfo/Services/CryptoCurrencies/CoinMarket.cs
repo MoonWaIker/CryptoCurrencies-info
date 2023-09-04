@@ -1,13 +1,13 @@
-﻿using Cryptocurrencies_info.Models.Cryptocurrencies;
-using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.Interfaces.CoinMarket;
-using Cryptocurrencies_info.Services.Requests;
+﻿using CryptocurrenciesInfo.Models.Cryptocurrencies;
+using CryptocurrenciesInfo.Models.DataBase;
+using CryptocurrenciesInfo.Services.Interfaces.CoinMarket;
+using CryptocurrenciesInfo.Services.Requests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using JsonException = Newtonsoft.Json.JsonException;
 
-namespace Cryptocurrencies_info.Services.CryptoCurrencies
+namespace CryptocurrenciesInfo.Services.CryptoCurrencies
 {
     public class CoinMarket : MainComponent, ICoinMarketExtended, ICoinMarketBase, IDisposable
     {

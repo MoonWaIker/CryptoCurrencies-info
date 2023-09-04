@@ -1,9 +1,9 @@
-﻿using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.Interfaces.Connection;
+﻿using CryptocurrenciesInfo.Models.DataBase;
+using CryptocurrenciesInfo.Services.Interfaces.Connection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Cryptocurrencies_info.Services.DataBase
+namespace CryptocurrenciesInfo.Services.DataBase
 {
     public class EntityFramework : DbContext, IConnectionGetter, IConnectionFiller
     {
@@ -74,31 +74,6 @@ namespace Cryptocurrencies_info.Services.DataBase
                 // Add and update
                 Markets.AddRange(marketsToAdd);
                 Markets.UpdateRange(marketsToUpdate);
-                _ = SaveChanges();
-                transaction.Commit();
-            }
-            // Rollback
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message, ex);
-                try
-                {
-                    transaction.Rollback();
-                }
-                catch (Exception exRollback)
-                {
-                    logger.LogError(exRollback.Message, exRollback);
-                }
-            }
-        }
-
-        // Truncate table
-        public void RefreshTable()
-        {
-            using IDbContextTransaction transaction = Database.BeginTransaction();
-            try
-            {
-                Markets.RemoveRange(Markets);
                 _ = SaveChanges();
                 transaction.Commit();
             }

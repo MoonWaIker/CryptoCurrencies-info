@@ -1,7 +1,7 @@
-using Cryptocurrencies_info.Models.DataBase;
+using CryptocurrenciesInfo.Models.DataBase;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cryptocurrencies_info.Services.DataBase
+namespace CryptocurrenciesInfo.Services.DataBase
 {
     // TODO Some exception at the start
     public class PostgreSql : EntityFramework

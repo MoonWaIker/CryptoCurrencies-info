@@ -1,4 +1,4 @@
-namespace Cryptocurrencies_info.Models
+namespace CryptocurrenciesInfo.Models
 {
     public class ErrorViewModel
     {

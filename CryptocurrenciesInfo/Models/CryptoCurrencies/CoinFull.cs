@@ -1,4 +1,4 @@
-namespace Cryptocurrencies_info.Models.Cryptocurrencies
+namespace CryptocurrenciesInfo.Models.Cryptocurrencies
 {
     public class CoinFull : Coin
     {

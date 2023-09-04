@@ -1,4 +1,4 @@
-namespace Cryptocurrencies_info.Services.Interfaces.Main
+namespace CryptocurrenciesInfo.Services.Interfaces.Main
 {
     public interface IMainInterface
     {

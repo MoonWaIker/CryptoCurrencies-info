@@ -1,6 +1,6 @@
-﻿using Cryptocurrencies_info.Models.DataBase;
+﻿using CryptocurrenciesInfo.Models.DataBase;
 
-namespace Cryptocurrencies_info.Models.Cryptocurrencies
+namespace CryptocurrenciesInfo.Models.Cryptocurrencies
 {
     public class Market : CoinGeckoMarket
     {

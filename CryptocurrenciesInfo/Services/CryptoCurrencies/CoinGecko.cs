@@ -1,12 +1,12 @@
-﻿using Cryptocurrencies_info.Models.DataBase;
-using Cryptocurrencies_info.Services.Interfaces.Main;
-using Cryptocurrencies_info.Services.Requests;
+﻿using CryptocurrenciesInfo.Models.DataBase;
+using CryptocurrenciesInfo.Services.Interfaces.Main;
+using CryptocurrenciesInfo.Services.Requests;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Cryptocurrencies_info.Services.CryptoCurrencies
+namespace CryptocurrenciesInfo.Services.CryptoCurrencies
 {
     public class CoinGecko : BackgroundService
     {

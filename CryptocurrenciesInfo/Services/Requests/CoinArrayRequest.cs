@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Cryptocurrencies_info.Services.Requests
+namespace CryptocurrenciesInfo.Services.Requests
 {
     public class CoinArrayRequest : IRequest<string[]> { }
 }

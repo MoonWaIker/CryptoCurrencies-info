@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace Cryptocurrencies_info.Models.Cryptocurrencies
+namespace CryptocurrenciesInfo.Models.Cryptocurrencies
 {
     public class Coin
     {

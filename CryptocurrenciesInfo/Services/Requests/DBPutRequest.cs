@@ -1,7 +1,7 @@
-using Cryptocurrencies_info.Models.DataBase;
+using CryptocurrenciesInfo.Models.DataBase;
 using MediatR;
 
-namespace Cryptocurrencies_info.Services.Requests
+namespace CryptocurrenciesInfo.Services.Requests
 {
     public class DBPutRequest : IRequest
     {

@@ -1,7 +1,7 @@
-using Cryptocurrencies_info.Models.Cryptocurrencies;
-using Cryptocurrencies_info.Services.Interfaces.Main;
+using CryptocurrenciesInfo.Models.Cryptocurrencies;
+using CryptocurrenciesInfo.Services.Interfaces.Main;
 
-namespace Cryptocurrencies_info.Services.Interfaces.CoinMarket
+namespace CryptocurrenciesInfo.Services.Interfaces.CoinMarket
 {
     public interface ICoinMarketBase : IMainInterface
     {

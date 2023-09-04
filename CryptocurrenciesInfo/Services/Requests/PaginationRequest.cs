@@ -1,7 +1,7 @@
-using Cryptocurrencies_info.Models.Cryptocurrencies;
+using CryptocurrenciesInfo.Models.Cryptocurrencies;
 using MediatR;
 
-namespace Cryptocurrencies_info.Services.Requests
+namespace CryptocurrenciesInfo.Services.Requests
 {
     public class PaginationRequest : IRequest<PaginatedMarkets>
     {

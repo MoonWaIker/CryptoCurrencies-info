@@ -1,8 +1,8 @@
-﻿using Cryptocurrencies_info.Models.Cryptocurrencies;
-using Cryptocurrencies_info.Services.Interfaces;
-using Cryptocurrencies_info.Services.Requests;
+﻿using CryptocurrenciesInfo.Models.Cryptocurrencies;
+using CryptocurrenciesInfo.Services.Interfaces;
+using CryptocurrenciesInfo.Services.Requests;
 
-namespace Cryptocurrencies_info.Services.CryptoCurrencies
+namespace CryptocurrenciesInfo.Services.CryptoCurrencies
 {
     public sealed class BuisnessLogic : MainComponent, IBuisnessLogic
     {

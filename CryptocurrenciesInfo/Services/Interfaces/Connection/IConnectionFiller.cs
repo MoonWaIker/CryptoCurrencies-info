@@ -1,6 +1,6 @@
-using Cryptocurrencies_info.Models.DataBase;
+using CryptocurrenciesInfo.Models.DataBase;
 
-namespace Cryptocurrencies_info.Services.Interfaces.Connection
+namespace CryptocurrenciesInfo.Services.Interfaces.Connection
 {
     public interface IConnectionFiller
     {

@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Cryptocurrencies_info</RootNamespace>
+    <RootNamespace>CryptocurrenciesInfo</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

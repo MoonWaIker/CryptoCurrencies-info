@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Cryptocurrencies_info.Models.DataBase
+namespace CryptocurrenciesInfo.Models.DataBase
 {
     public class MarketBase
     {

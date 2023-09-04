@@ -1,6 +1,6 @@
-using Cryptocurrencies_info.Services.Interfaces.Main;
+using CryptocurrenciesInfo.Services.Interfaces.Main;
 
-namespace Cryptocurrencies_info.Services
+namespace CryptocurrenciesInfo.Services
 {
     public class MainComponent : IMainInterface
     {

@@ -1,5 +1,5 @@
-using Cryptocurrencies_info.Services;
-using Cryptocurrencies_info.Services.CryptoCurrencies;
+using CryptocurrenciesInfo.Services;
+using CryptocurrenciesInfo.Services.CryptoCurrencies;
 
 var builder = WebApplication.CreateBuilder(args);
 
