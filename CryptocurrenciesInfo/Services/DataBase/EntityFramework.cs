@@ -11,17 +11,16 @@ namespace Cryptocurrencies_info.Services.DataBase
         // DataBase
         public DbSet<CoinGeckoMarket> Markets { get; set; }
 
-        // Hardcodes
         private readonly ILogger<EntityFramework> logger;
-
-        public EntityFramework(ILogger<EntityFramework> logger)
-        {
-            this.logger = logger;
-        }
 
         public EntityFramework(IServiceProvider serviceProvider)
         {
             logger = serviceProvider.GetRequiredService<ILogger<EntityFramework>>();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            _ = optionsBuilder.EnableSensitiveDataLogging();
         }
 
         // Add markets

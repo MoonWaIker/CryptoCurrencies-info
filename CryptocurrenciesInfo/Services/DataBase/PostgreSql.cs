@@ -6,7 +6,6 @@ namespace Cryptocurrencies_info.Services.DataBase
     // TODO Some exception at the start
     public class PostgreSql : EntityFramework
     {
-        // Hardcodes
         private readonly string connectionString;
 
         public PostgreSql(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -32,10 +31,8 @@ namespace Cryptocurrencies_info.Services.DataBase
             Markets = Set<CoinGeckoMarket>();
         }
 
-        // Configuration of connection
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            _ = optionsBuilder.EnableSensitiveDataLogging();
             _ = optionsBuilder.UseNpgsql(connectionString);
         }
     }

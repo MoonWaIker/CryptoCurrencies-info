@@ -6,7 +6,6 @@ namespace Cryptocurrencies_info.Services.DataBase
     public class MicrosoftSql : EntityFramework
     {
 
-        // Hardcodes
         private readonly string connectionString;
 
         public MicrosoftSql(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -24,10 +23,8 @@ namespace Cryptocurrencies_info.Services.DataBase
             Markets = Set<CoinGeckoMarket>();
         }
 
-        // Configuration of connection
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            _ = optionsBuilder.EnableSensitiveDataLogging();
             _ = optionsBuilder.UseSqlServer(connectionString);
         }
     }
