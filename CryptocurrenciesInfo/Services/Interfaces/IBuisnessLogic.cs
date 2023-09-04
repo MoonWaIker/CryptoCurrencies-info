@@ -5,6 +5,6 @@ namespace Cryptocurrencies_info.Services.Interfaces
 {
     public interface IBuisnessLogic : IMainInterface
     {
-        public PaginatedMarkets Pagination(int pageNumber, string searchString, CancellationToken cancellationToken);
+        public Task<PaginatedMarkets> Pagination(int pageNumber, string searchString, CancellationToken cancellationToken);
     }
 }

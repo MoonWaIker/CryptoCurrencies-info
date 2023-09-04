@@ -9,7 +9,7 @@ namespace Cryptocurrencies_info.Services.Interfaces.CoinMarket
         public IEnumerable<Coin> GetCoinMarket(int limit);
 
         // Get coin with markets
-        public CoinFull GetCoin(string coinId, CancellationToken cancellationToken);
+        public Task<CoinFull> GetCoin(string coinId, CancellationToken cancellationToken);
 
         // Exchange coins
         public decimal GetExchange(string from, string target, decimal amount);

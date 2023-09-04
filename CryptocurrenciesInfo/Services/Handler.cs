@@ -32,36 +32,36 @@ namespace Cryptocurrencies_info.Services
         }
 
         // Mediator tasks
-        Task<PaginatedMarkets> IRequestHandler<PaginationRequest, PaginatedMarkets>.Handle(PaginationRequest request, CancellationToken cancellationToken)
+        async Task<PaginatedMarkets> IRequestHandler<PaginationRequest, PaginatedMarkets>.Handle(PaginationRequest request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(buisnessLogic.Pagination(request.PageNumber, request.SearchString, cancellationToken));
+            return await buisnessLogic.Pagination(request.PageNumber, request.SearchString, cancellationToken);
         }
 
-        Task<IEnumerable<Coin>> IRequestHandler<CoinMarketRequest, IEnumerable<Coin>>.Handle(CoinMarketRequest request, CancellationToken cancellationToken)
+        async Task<IEnumerable<Coin>> IRequestHandler<CoinMarketRequest, IEnumerable<Coin>>.Handle(CoinMarketRequest request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(request.Limit == 0 ? coinMarketBase.GetCoinMarket() : coinMarketExtanded.GetCoinMarket(request.Limit));
+            return request.Limit == 0 ? coinMarketBase.GetCoinMarket() : coinMarketExtanded.GetCoinMarket(request.Limit);
         }
 
-        Task<string[]> IRequestHandler<CoinArrayRequest, string[]>.Handle(CoinArrayRequest request, CancellationToken cancellationToken)
+        async Task<string[]> IRequestHandler<CoinArrayRequest, string[]>.Handle(CoinArrayRequest request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(coinMarketExtanded.GetCoinArray());
+            return coinMarketExtanded.GetCoinArray();
         }
 
-        Task<CoinFull> IRequestHandler<CoinRequest, CoinFull>.Handle(CoinRequest request, CancellationToken cancellationToken)
+        async Task<CoinFull> IRequestHandler<CoinRequest, CoinFull>.Handle(CoinRequest request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(coinMarketExtanded.GetCoin(request.Id, cancellationToken));
+            return await coinMarketExtanded.GetCoin(request.Id, cancellationToken);
         }
 
-        Task IRequestHandler<DBPutRequest>.Handle(DBPutRequest request, CancellationToken cancellationToken)
+        async Task IRequestHandler<DBPutRequest>.Handle(DBPutRequest request, CancellationToken cancellationToken)
         {
             IConnectionFiller connectionFiller = serviceProvider.GetRequiredService<IConnectionFiller>();
-            return Task.Run(() => connectionFiller.AddMarkets(request.CoinGeckoMarkets), cancellationToken);
+            connectionFiller.AddMarkets(request.CoinGeckoMarkets);
         }
 
-        Task<IEnumerable<CoinGeckoMarket>> IRequestHandler<RequestFromDB, IEnumerable<CoinGeckoMarket>>.Handle(RequestFromDB request, CancellationToken cancellationToken)
+        async Task<IEnumerable<CoinGeckoMarket>> IRequestHandler<RequestFromDB, IEnumerable<CoinGeckoMarket>>.Handle(RequestFromDB request, CancellationToken cancellationToken)
         {
             IConnectionGetter connectionGetter = serviceProvider.GetRequiredService<IConnectionGetter>();
-            return Task.FromResult(connectionGetter.GetMarkets(request.Markets));
+            return connectionGetter.GetMarkets(request.Markets);
         }
     }
 }

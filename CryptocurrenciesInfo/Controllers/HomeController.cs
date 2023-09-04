@@ -21,19 +21,19 @@ namespace Cryptocurrencies_info.Controllers
         }
 
         [Route("Home")]
-        public IActionResult Index(CancellationToken cancellationToken)
+        public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to index view", DateTime.Now);
             CoinMarketRequest request = new()
             {
                 Limit = 10
             };
-            IEnumerable<Coin> coinMarket = mediator.Handle(request, cancellationToken).Result;
+            IEnumerable<Coin> coinMarket = await mediator.Handle(request, cancellationToken);
             return View(coinMarket);
         }
 
         [Route("[action]")]
-        public IActionResult List(int pageNumber, string searchString, CancellationToken cancellationToken)
+        public async Task<IActionResult> List(int pageNumber, string searchString, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to list view", DateTime.Now);
             try
@@ -43,7 +43,7 @@ namespace Cryptocurrencies_info.Controllers
                     PageNumber = pageNumber,
                     SearchString = searchString
                 };
-                PaginatedMarkets page = mediator.Handle(request, cancellationToken).Result;
+                PaginatedMarkets page = await mediator.Handle(request, cancellationToken);
                 return View(page);
             }
             catch (Exception ex)
@@ -53,7 +53,7 @@ namespace Cryptocurrencies_info.Controllers
         }
 
         [Route("Coin/{id?}")]
-        public IActionResult Coin(string id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Coin(string id, CancellationToken cancellationToken)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace Cryptocurrencies_info.Controllers
                 {
                     Id = id
                 };
-                CoinFull coin = mediator.Handle(request, cancellationToken).Result;
+                CoinFull coin = await mediator.Handle(request, cancellationToken);
                 return View(coin);
             }
             catch (Exception ex)
@@ -72,11 +72,11 @@ namespace Cryptocurrencies_info.Controllers
         }
 
         [Route("[action]")]
-        public IActionResult Calculator(CancellationToken cancellationToken)
+        public async Task<IActionResult> Calculator(CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to calculator view", DateTime.Now);
             CoinArrayRequest request = new();
-            string[] coinArray = mediator.Handle(request, cancellationToken).Result;
+            string[] coinArray = await mediator.Handle(request, cancellationToken);
             return View(coinArray);
         }
 

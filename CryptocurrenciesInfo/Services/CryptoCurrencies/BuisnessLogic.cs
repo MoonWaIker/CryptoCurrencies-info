@@ -8,11 +8,11 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
     {
         private const int size = 100;
 
-        public PaginatedMarkets Pagination(int pageNumber, string searchString, CancellationToken cancellationToken)
+        public async Task<PaginatedMarkets> Pagination(int pageNumber, string searchString, CancellationToken cancellationToken)
         {
             // Getting markets
             CoinMarketRequest request = new();
-            IEnumerable<Coin> coins = Mediator.Handle(request, cancellationToken).Result;
+            IEnumerable<Coin> coins = await Mediator.Handle(request, cancellationToken);
 
             // Filtering
             if (!string.IsNullOrEmpty(searchString))

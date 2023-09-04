@@ -52,7 +52,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Get coin with markets
-        public CoinFull GetCoin(string coinId, CancellationToken cancellationToken)
+        public async Task<CoinFull> GetCoin(string coinId, CancellationToken cancellationToken)
         {
             // Depency injection
             if (!GetCoinArray().Contains(coinId))
@@ -67,7 +67,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
                     ? JObject.Parse(response.Content!)["data"]!
                         .ToObject<CoinFull>() ?? throw new JsonSerializationException()
                     : throw new JsonException();
-            coin.Markets = GetMarkets(coinId, cancellationToken);
+            coin.Markets = await GetMarkets(coinId, cancellationToken);
             return coin;
         }
 
@@ -114,7 +114,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
         }
 
         // Get markets of coin
-        private Market[] GetMarkets(string coinId, CancellationToken cancellationToken)
+        private async Task<Market[]> GetMarkets(string coinId, CancellationToken cancellationToken)
         {
             // Initialization
             // Markets from CoinCap
@@ -126,7 +126,7 @@ namespace Cryptocurrencies_info.Services.CryptoCurrencies
             };
 
             // Markets from SQL
-            IEnumerable<CoinGeckoMarket> marketSQL = Mediator.Handle(request, cancellationToken).Result;
+            IEnumerable<CoinGeckoMarket> marketSQL = await Mediator.Handle(request, cancellationToken);
 
             return marketSQL
                 .Join(markets,
