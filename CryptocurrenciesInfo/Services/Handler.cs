@@ -55,7 +55,7 @@ namespace Cryptocurrencies_info.Services
         async Task IRequestHandler<DBPutRequest>.Handle(DBPutRequest request, CancellationToken cancellationToken)
         {
             IConnectionFiller connectionFiller = serviceProvider.GetRequiredService<IConnectionFiller>();
-            await Task.Run(() => connectionFiller.AddMarkets(request.CoinGeckoMarkets));
+            await Task.Run(() => connectionFiller.AddMarkets(request.CoinGeckoMarkets), cancellationToken);
         }
 
         Task<IEnumerable<CoinGeckoMarket>> IRequestHandler<RequestFromDB, IEnumerable<CoinGeckoMarket>>.Handle(RequestFromDB request, CancellationToken cancellationToken)
