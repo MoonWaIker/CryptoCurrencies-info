@@ -5,7 +5,6 @@ using CryptocurrenciesInfo.Services.Interfaces.CoinMarket;
 using CryptocurrenciesInfo.Services.Interfaces.Connection;
 using CryptocurrenciesInfo.Services.Interfaces.Main;
 using CryptocurrenciesInfo.Services.Requests;
-using MediatR;
 
 namespace CryptocurrenciesInfo.Services
 {
@@ -52,10 +51,10 @@ namespace CryptocurrenciesInfo.Services
             return await coinMarketExtanded.GetCoin(request.Id, cancellationToken);
         }
 
-        public async Task Handle(DBPutRequest request, CancellationToken cancellationToken)
+        public Task Handle(DBPutRequest request, CancellationToken cancellationToken)
         {
             IConnectionFiller connectionFiller = serviceProvider.GetRequiredService<IConnectionFiller>();
-            await Task.Run(() => connectionFiller.AddMarkets(request.CoinGeckoMarkets), cancellationToken);
+            return Task.Run(() => connectionFiller.AddMarkets(request.CoinGeckoMarkets), cancellationToken);
         }
 
         public Task<IEnumerable<CoinGeckoMarket>> Handle(RequestFromDB request, CancellationToken cancellationToken)
