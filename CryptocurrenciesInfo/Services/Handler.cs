@@ -32,7 +32,7 @@ namespace CryptocurrenciesInfo.Services
         }
 
         // Mediator tasks
-        async Task<PaginatedMarkets> IRequestHandler<PaginationRequest, PaginatedMarkets>.Handle(PaginationRequest request, CancellationToken cancellationToken)
+        public async Task<PaginatedMarkets> Handle(PaginationRequest request, CancellationToken cancellationToken)
         {
             return await buisnessLogic.Pagination(request.PageNumber, request.SearchString, cancellationToken);
         }
@@ -42,23 +42,23 @@ namespace CryptocurrenciesInfo.Services
             return Task.Run(() => request.Limit == 0 ? coinMarketBase.GetCoinMarket() : coinMarketExtanded.GetCoinMarket(request.Limit));
         }
 
-        Task<string[]> IRequestHandler<CoinArrayRequest, string[]>.Handle(CoinArrayRequest request, CancellationToken cancellationToken)
+        public Task<string[]> Handle(CoinArrayRequest request, CancellationToken cancellationToken)
         {
             return Task.Run(() => coinMarketExtanded.GetCoinArray());
         }
 
-        async Task<CoinFull> IRequestHandler<CoinRequest, CoinFull>.Handle(CoinRequest request, CancellationToken cancellationToken)
+        public async Task<CoinFull> Handle(CoinRequest request, CancellationToken cancellationToken)
         {
             return await coinMarketExtanded.GetCoin(request.Id, cancellationToken);
         }
 
-        async Task IRequestHandler<DBPutRequest>.Handle(DBPutRequest request, CancellationToken cancellationToken)
+        public async Task Handle(DBPutRequest request, CancellationToken cancellationToken)
         {
             IConnectionFiller connectionFiller = serviceProvider.GetRequiredService<IConnectionFiller>();
             await Task.Run(() => connectionFiller.AddMarkets(request.CoinGeckoMarkets), cancellationToken);
         }
 
-        Task<IEnumerable<CoinGeckoMarket>> IRequestHandler<RequestFromDB, IEnumerable<CoinGeckoMarket>>.Handle(RequestFromDB request, CancellationToken cancellationToken)
+        public Task<IEnumerable<CoinGeckoMarket>> Handle(RequestFromDB request, CancellationToken cancellationToken)
         {
             IConnectionGetter connectionGetter = serviceProvider.GetRequiredService<IConnectionGetter>();
             return Task.Run(() => connectionGetter.GetMarkets(request.Markets));
