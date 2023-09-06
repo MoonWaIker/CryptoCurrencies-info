@@ -37,7 +37,7 @@ namespace CryptocurrenciesInfo.Services
             return await buisnessLogic.Pagination(request.PageNumber, request.SearchString, cancellationToken);
         }
 
-        Task<IEnumerable<Coin>> IRequestHandler<CoinMarketRequest, IEnumerable<Coin>>.Handle(CoinMarketRequest request, CancellationToken cancellationToken)
+        public Task<IEnumerable<Coin>> Handle(CoinMarketRequest request, CancellationToken cancellationToken)
         {
             return Task.Run(() => request.Limit == 0 ? coinMarketBase.GetCoinMarket() : coinMarketExtanded.GetCoinMarket(request.Limit));
         }
