@@ -13,6 +13,13 @@ namespace CryptocurrenciesInfo.Controllers
         private readonly IHandler mediator;
         private readonly ILogger<HomeController> _logger;
 
+        // Define route URLs as constants
+        private const string IndexRoute = "Home";
+        private const string ListRoute = "[action]";
+        private const string CoinRoute = "Coin/{id?}";
+        private const string CalculatorRoute = "[action]";
+        private const string PrivacyRoute = "[action]";
+
         public HomeController(ILogger<HomeController> logger, IHandler mediator)
         {
             _logger = logger;
@@ -20,7 +27,7 @@ namespace CryptocurrenciesInfo.Controllers
             this.mediator = mediator;
         }
 
-        [Route("Home")]
+        [Route(IndexRoute)]
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to index view", DateTime.Now);
@@ -32,7 +39,7 @@ namespace CryptocurrenciesInfo.Controllers
             return View(coinMarket);
         }
 
-        [Route("[action]")]
+        [Route(ListRoute)]
         public async Task<IActionResult> List(int pageNumber, string searchString, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to list view", DateTime.Now);
@@ -52,7 +59,7 @@ namespace CryptocurrenciesInfo.Controllers
             }
         }
 
-        [Route("Coin/{id?}")]
+        [Route(CoinRoute)]
         public async Task<IActionResult> Coin(string id, CancellationToken cancellationToken)
         {
             try
@@ -71,7 +78,7 @@ namespace CryptocurrenciesInfo.Controllers
             }
         }
 
-        [Route("[action]")]
+        [Route(CalculatorRoute)]
         public async Task<IActionResult> Calculator(CancellationToken cancellationToken)
         {
             _logger.LogDebug("Directed to calculator view", DateTime.Now);
@@ -80,7 +87,7 @@ namespace CryptocurrenciesInfo.Controllers
             return View(coinArray);
         }
 
-        [Route("[action]")]
+        [Route(PrivacyRoute)]
         public IActionResult Privacy()
         {
             _logger.LogDebug("Directed to privacy view", DateTime.Now);
