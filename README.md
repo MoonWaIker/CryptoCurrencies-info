@@ -68,7 +68,6 @@ method and possible commission).
 - [X] Make normal Views
 - [X] EntityFramework Core
 - [X] [Entity Types](https://learn.microsoft.com/en-us/ef/core/modeling/entity-types?tabs=data-annotations)
-- [ ] Fix requests using by interfaces
 - [ ] Active record for CoinGecko
 - [ ] Release project
 - [ ] Docker
