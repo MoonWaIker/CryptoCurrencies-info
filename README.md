@@ -77,6 +77,7 @@ method and possible commission).
 - [ ] Azure
 - [ ] ASP.NET Core attributes
 - [ ] Angular
+- [ ] Calcualtor
 - [ ] Additional data (Displaying quote charts for currencies, for ex.)
 - [ ] Page in which you can convert one currency to another
 - [ ] Light / dark theme support
