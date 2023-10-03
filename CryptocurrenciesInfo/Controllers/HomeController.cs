@@ -39,6 +39,7 @@ namespace CryptocurrenciesInfo.Controllers
             return View(coinMarket);
         }
 
+        // TODO make normal exception handler (400 for bad request and 500 for internal errors)
         [Route(ListRoute)]
         public async Task<IActionResult> List(int pageNumber, string searchString, CancellationToken cancellationToken)
         {
