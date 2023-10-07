@@ -30,12 +30,11 @@ namespace CryptocurrenciesInfo.Models.DataBase
         [OnDeserialized]
         protected void OnDeserialized(StreamingContext context)
         {
-            // TODO check model, cause you changed from ["name"]! to throwing
             // TODO Also check other code for "!"
             // TODO learn NULL pattern
 
-            Name = (string)(additionalData ?? throw new JsonSerializationException())["market"]["name"] ?? throw new JsonSerializationException();
-            Logo = (string)(additionalData ?? throw new JsonSerializationException())["market"]["logo"] ?? throw new JsonSerializationException();
+            Name = (string?)additionalData?["market"]["name"] ?? throw new JsonSerializationException();
+            Logo = (string?)additionalData?["market"]["logo"] ?? string.Empty;
         }
     }
 }

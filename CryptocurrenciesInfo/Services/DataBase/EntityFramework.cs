@@ -9,7 +9,7 @@ namespace CryptocurrenciesInfo.Services.DataBase
     {
         // TODO Is must to have Parameterized Queries here?
         // DataBase
-        public DbSet<CoinGeckoMarket> Markets { get; set; }
+        public required DbSet<CoinGeckoMarket> Markets { get; set; }
 
         private readonly ILogger<EntityFramework> logger;
 
