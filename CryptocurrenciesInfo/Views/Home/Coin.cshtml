@@ -48,7 +48,7 @@
     .GroupBy(market => market.Name)
     .OrderBy(market => market
     .Average(item => item.Price))
-    .OrderBy(market => market
+    .ThenBy(market => market
     .Average(obj =>
     {
        if (obj.Trust == "green")
