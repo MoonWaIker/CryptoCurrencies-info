@@ -21,19 +21,16 @@ namespace CryptocurrenciesInfo.Services.CryptoCurrencies
         }
 
         // Find markets
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return Task.Run(() =>
+            while (!stoppingToken.IsCancellationRequested)
             {
-                while (!stoppingToken.IsCancellationRequested)
-                {
-                    ParseMarkets(cancellationToken: stoppingToken);
-                }
-            }, stoppingToken);
+                await ParseMarkets(cancellationToken: stoppingToken);
+            }
         }
 
         // Parse markets
-        private void ParseMarkets(CancellationToken cancellationToken)
+        private async Task ParseMarkets(CancellationToken cancellationToken)
         {
             // Initialization
             IEnumerable<string> marketsList = ParseMarketsId();
@@ -76,7 +73,7 @@ namespace CryptocurrenciesInfo.Services.CryptoCurrencies
                     }
                     else
                     {
-                        Thread.Sleep(60000);
+                        await Task.Delay(60000, cancellationToken);
                     }
                 }
             }
