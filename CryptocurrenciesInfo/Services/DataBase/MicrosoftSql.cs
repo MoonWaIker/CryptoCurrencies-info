@@ -1,5 +1,6 @@
 ﻿using CryptocurrenciesInfo.Models.DataBase;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CryptocurrenciesInfo.Services.DataBase
 {
@@ -13,12 +14,15 @@ namespace CryptocurrenciesInfo.Services.DataBase
             // Set configurations
             IConfigurationSection database = serviceProvider.GetRequiredService<IConfiguration>().GetSection("DataBase");
 
-            // Connection string
-            string? databaseName = database.GetValue<string>("database");
+            string host = database.GetValue<string>("host") ?? throw new ArgumentNullException(nameof(serviceProvider), "Host must be not null");
+            string databaseName = database.GetValue<string>("database") ?? string.Empty;
+            string user = database.GetValue<string>("username") ?? string.Empty;
+            string password = database.GetValue<string>("password") ?? string.Empty;
             bool trustedConnection = database.GetValue<bool>("trustedConnection");
-            connectionString = @$"Server=(localdb)\mssqllocaldb;Database={databaseName};Trusted_Connection={trustedConnection};";
+            bool trustServerCertificate = database.GetValue<bool>("trustServerCertificate");
 
-            // Markets setting
+            connectionString = @$"Server={host};{(databaseName.IsNullOrEmpty() ? string.Empty : $"Database ={databaseName}")};Trusted_Connection={trustedConnection};Trust Server Certificate={trustServerCertificate};{(user.IsNullOrEmpty() ? string.Empty : $"User ID={user};")}{(password.IsNullOrEmpty() ? string.Empty : $"Password={password};")}";
+
             Markets = Set<CoinGeckoMarket>();
         }
 
