@@ -9,9 +9,13 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.vscode
-*.sonarqube
 *.commands
+
+# Visual Studio Code
+*.vscode/
+
+# Rider
+.idea/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
