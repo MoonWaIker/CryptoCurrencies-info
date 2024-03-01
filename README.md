@@ -7,7 +7,7 @@ To implement the program, I used the next stack:
 * ASP.NET Core
 * EntityFramework Core
 * ADO.NET (at old sql class version)
-* MSSQL\PostgreSQL (you can switch for you need)
+* MSSQL\PostgresSQL (you can switch for you need)
 * C# Language
 * .Net Core 7
 * [CoinCap API](https://docs.coincap.io/)
@@ -22,7 +22,7 @@ Also I followed next patterns:
 * OOP
 * MVC
 * SOLID
-* MediatR
+* Mediator
 * NULL Pattern
 
 To maintain clean code I use following scanners:
@@ -63,7 +63,7 @@ method and possible commission).
 * Support for multiple localizations.
 
 ## Task Checklist
-- [X] MediatR
+- [X] Mediator
 - [x] SOLID
 - [X] Make normal Views
 - [X] EntityFramework Core
@@ -76,7 +76,7 @@ method and possible commission).
 - [ ] Azure
 - [ ] ASP.NET Core attributes
 - [ ] Angular
-- [ ] Calcualtor
+- [ ] Calculator
 - [ ] Additional data (Displaying quote charts for currencies, for ex.)
 - [ ] Page in which you can convert one currency to another
 - [ ] Light / dark theme support
