@@ -1,177 +1,142 @@
-﻿using CryptocurrenciesInfo.Models.Cryptocurrencies;
+﻿using CryptocurrenciesInfo.DataBase;
+using CryptocurrenciesInfo.Models.Cryptocurrencies;
 using CryptocurrenciesInfo.Models.DataBase;
 using CryptocurrenciesInfo.Services.Interfaces.CoinMarket;
-using CryptocurrenciesInfo.Services.Requests;
+using CryptocurrenciesInfo.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
-using JsonException = Newtonsoft.Json.JsonException;
 
 namespace CryptocurrenciesInfo.Services.CryptoCurrencies
 {
-    public class CoinMarket : MainComponent, ICoinMarketExtended, ICoinMarketBase, IDisposable
+    public sealed class CoinMarket(MarketsContext context)
+        : ICoinMarket
     {
-        // Hardcodes
-        private const int maxCount = 2000;
-        private readonly RestClient client = new("https://api.coincap.io/v2");
+        private const int MaxCount = 2000;
+        private const char Separator = ',';
+        private const string AssetsRequest = "/assets";
+        private const string CoinRequest = "/assets/{0}";
+        private const string MarketsRequest = "/assets/{0}/markets";
+        private const string IdParameter = "id";
+        private const string IdsParameter = "ids";
+        private const string DataParameter = "data";
+        private const string LimitParameterString = "limit";
+        private const string PriceParameter = "priceUsd";
 
-        // Garbage collectors
-        public void Dispose()
+        private static readonly RestClient Client = new("https://api.coincap.io/v2");
+
+        private static readonly Parameter LimitParameter =
+            Parameter.CreateParameter(LimitParameterString, MaxCount, ParameterType.QueryString);
+
+        private static readonly RestRequest Request = new RestRequest(AssetsRequest).AddParameter(LimitParameter);
+
+        public IEnumerable<Coin> GetCoinMarket(int limit = MaxCount)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            IsAmountValid(limit);
+
+            var request = new RestRequest(AssetsRequest).AddParameter(LimitParameterString, limit);
+            var response = Client.Execute(request);
+
+            return from coin in JObject.Parse(response.Content ??
+                                              throw new JsonReaderException(
+                                                  ExceptionMessages.JsonReaderExceptionMessage))[DataParameter]
+                   select coin.ToObject<Coin>();
         }
 
-        protected virtual void Dispose(bool disposing)
+        // TODO Is it possible to simplify it?
+        public CoinFull GetCoin(string coinId)
         {
-            client.Dispose();
-        }
+            IsCoinIdValid(coinId);
 
-        // Get all coins
-        public IEnumerable<Coin> GetCoinMarket()
-        {
-            return GetCoinMarket(maxCount);
-        }
+            RestRequest request = new(string.Format(CoinRequest, coinId));
+            var response = Client.Execute(request);
 
-        public IEnumerable<Coin> GetCoinMarket(int limit)
-        {
-            RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("limit", limit);
-            RestResponse response = client.Execute(request);
-            return response.IsSuccessful
-                ? JObject.Parse(response.Content!)["data"]!
-                .Where(coin =>
-                    coin["rank"]?.Type is not JTokenType.Null &&
-                    coin["name"]?.Type is not JTokenType.Null &&
-                    coin["id"]?.Type is not JTokenType.Null &&
-                    coin["priceUsd"]?.Type is not JTokenType.Null &&
-                    coin["changePercent24Hr"]?.Type is not JTokenType.Null &&
-                    coin["volumeUsd24Hr"]?.Type is not JTokenType.Null
-                )
-                .Select(coin => coin.ToObject<Coin>()!)
-                : throw new JsonException();
-        }
+            var coin = JObject.Parse(response.Content ??
+                                     throw new JsonReaderException(ExceptionMessages.JsonReaderExceptionMessage))
+                [DataParameter]?
+                .ToObject<CoinFull>() ?? throw new JsonReaderException(ExceptionMessages.JsonReaderExceptionMessage);
+            coin.Markets = GetMarkets(coinId);
 
-        // Get coin with markets
-        public async Task<CoinFull> GetCoin(string coinId, CancellationToken cancellationToken)
-        {
-            // Depency injection
-            if (!GetCoinArray().Contains(coinId))
-            {
-                throw new ArgumentException("ID isn't valid", nameof(coinId));
-            }
-
-            // Parsing
-            RestRequest request = new($"/assets/{coinId}", Method.Get);
-            RestResponse response = client.Execute(request, cancellationToken);
-            CoinFull coin = response.IsSuccessful
-                    ? JObject.Parse(response.Content!)["data"]!
-                        .ToObject<CoinFull>() ?? throw new JsonSerializationException()
-                    : throw new JsonException();
-            coin.Markets = await GetMarkets(coinId, cancellationToken);
             return coin;
         }
 
-        // Exchange coins
         public decimal GetExchange(string from, string target, decimal amount)
         {
-            // Depency injection
-            if (!GetCoinArray().Contains(from))
-            {
-                throw new ArgumentException("ID isn't valid", nameof(from));
-            }
-            if (!GetCoinArray().Contains(target))
-            {
-                throw new ArgumentException("ID isn't valid", nameof(target));
-            }
-            if (amount <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(amount), "ID isn't valid");
-            }
+            IsCoinIdValid(from);
+            IsCoinIdValid(target);
+            IsAmountValid(amount);
 
-            // Parsing
-            RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("ids", $"{from},{target}");
-            RestResponse response = client.Execute(request);
-            return response.IsSuccessful
-                ? JObject.Parse(response.Content!)["data"]!
-                    .Select(i => i["priceUsd"]?.Type is not JTokenType.Null
-                    ? (decimal)i["priceUsd"]!
-                    : throw new JsonReaderException())
-                    .Aggregate((x, y) => x / y * amount)
-                : throw new JsonException();
+            var request = new RestRequest(AssetsRequest)
+                .AddParameter(IdsParameter, string.Join(Separator, from, target));
+            var response = Client.Execute(request);
+
+            return (JObject.Parse(response.Content ??
+                                  throw new JsonReaderException(ExceptionMessages.JsonReaderExceptionMessage))[
+                        DataParameter] ??
+                    throw new JsonReaderException(ExceptionMessages.JsonReaderExceptionMessage))
+                   .Select(static i => i[PriceParameter]?.ToObject<decimal>()
+                                       ?? throw new JsonReaderException(ExceptionMessages.JsonReaderExceptionMessage))
+                   .Aggregate((x, y) => x / y * amount);
         }
 
-        // Get an array of coins
-        public string[] GetCoinArray()
+        public IEnumerable<string> GetCoinArray()
         {
-            RestRequest request = new RestRequest("/assets", Method.Get).AddParameter("limit", maxCount);
-            RestResponse response = client.Execute(request);
-            return response.IsSuccessful
-                ? JObject.Parse(response.Content!)["data"]!
-                    .Where(coin => coin["id"]?.Type is not JTokenType.Null)
-                    .Select(c => (string)c["id"]!)
-                    .ToArray()
-                : throw new JsonException();
+            var response = Client.Execute(Request);
+
+            return from coin in (JObject.Parse(response.Content
+                                               ?? throw new JsonReaderException(
+                                                   ExceptionMessages.JsonReaderExceptionMessage))[DataParameter]
+                                 ?? throw new JsonReaderException(ExceptionMessages.JsonReaderExceptionMessage))
+                       .Select(static token => token[IdParameter]?.ToString())
+                   where coin.IsValid()
+                   select coin;
         }
 
-        // Get markets of coin
-        private async Task<Market[]> GetMarkets(string coinId, CancellationToken cancellationToken)
+        private void IsCoinIdValid(string coinId)
         {
-            // Initialization
-            // Markets from CoinCap
-            IEnumerable<CoinCapMarket> markets = GetMarketsList(coinId);
-
-            RequestFromDB request = new()
+            if (!GetCoinArray().Contains(coinId))
             {
-                Markets = markets
-            };
-
-            // Markets from SQL
-            IEnumerable<CoinGeckoMarket> marketSQL = await Mediator.Handle(request, cancellationToken);
-
-            return marketSQL
-                .Join(markets,
-                market1 =>
-                new
-                {
-                    Name = market1.Name.ToLowerInvariant(),
-                    market1.Base,
-                    market1.Target
-                },
-                market2 =>
-                new
-                {
-                    Name = market2.Name.ToLowerInvariant(),
-                    market2.Base,
-                    market2.Target
-                },
-                (market1, market2) =>
-                new Market
-                {
-                    Name = market1.Name,
-                    Base = market1.Base,
-                    Target = market1.Target,
-                    Price = market2.Price,
-                    Trust = market1.Trust,
-                    Logo = market1.Logo,
-                    Link = market1.Link,
-                })
-                .ToArray();
+                throw new ArgumentException(ExceptionMessages.InvalidId, nameof(coinId));
+            }
         }
 
-        // Get markets list with price from CoinCap
-        private IEnumerable<CoinCapMarket> GetMarketsList(string coinId)
+        private static void IsAmountValid<T>(IComparable<T> amount)
         {
-            RestRequest request = new RestRequest($"/assets/{coinId}/markets", Method.Get).AddParameter("limit", maxCount);
-            RestResponse response = client.Execute(request);
+            if (amount.CompareTo(default) <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount), ExceptionMessages.NumberLessThanZero);
+            }
+        }
+
+        private IEnumerable<Market> GetMarkets(string coinId)
+        {
+            return context.Markets
+                          .AsEnumerable()
+                          .Where(t => t.Base == coinId || t.Target == coinId)
+                          .Join(GetMarketsList(coinId), static dbMarket => dbMarket.GetHashCode(),
+                                static coinCapMarket => coinCapMarket.GetHashCode(),
+                                static (dbMarket, coinCapMarket) => new Market
+                                {
+                                    Name = dbMarket.Name,
+                                    Base = dbMarket.Base,
+                                    Target = dbMarket.Target,
+                                    Logo = dbMarket.Logo,
+                                    Trust = dbMarket.Trust,
+                                    Link = dbMarket.Logo,
+                                    Price = coinCapMarket.Price
+                                });
+        }
+
+        private static IEnumerable<CoinCapMarket> GetMarketsList(string coinId)
+        {
+            var request = new RestRequest(string.Format(MarketsRequest, coinId)).AddParameter(LimitParameter);
+            var response = Client.Execute(request);
+
             return response.IsSuccessful
-                ? JObject.Parse(response.Content!)["data"]!
-                    .Where(market => market["exchangeId"]?.Type is not JTokenType.Null &&
-                    market["priceUsd"]?.Type is not JTokenType.Null &&
-                    market["baseSymbol"]?.Type is not JTokenType.Null &&
-                    market["quoteSymbol"]?.Type is not JTokenType.Null)
-                    .Select(market => market.ToObject<CoinCapMarket>()!)
-                : throw new JsonException();
+                ? from token in JObject.Parse(response.Content ?? throw new JsonReaderException(
+                                                  ExceptionMessages.JsonReaderExceptionMessage))[DataParameter]
+                  select token.ToObject<CoinCapMarket>()
+                : Enumerable.Empty<CoinCapMarket>();
         }
     }
-
 }

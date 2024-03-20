@@ -1,15 +1,15 @@
 namespace CryptocurrenciesInfo.Models.Cryptocurrencies
 {
-    public class PaginatedMarkets
+    public sealed class PaginatedMarkets
     {
-        public IEnumerable<Coin> Data { get; set; } = Array.Empty<Coin>();
+        public IEnumerable<Coin> Data { get; init; } = Array.Empty<Coin>();
 
-        public int PageNumber { get; set; }
+        public int PageNumber { get; init; }
 
-        public int MaxPages { get; set; }
+        public int MaxPages { get; init; }
 
-        public string SearchString { get; set; } = string.Empty;
+        public string SearchString { get; init; } = string.Empty;
 
-        public int Size { get; set; }
+        public int Size { get; init; }
     }
 }

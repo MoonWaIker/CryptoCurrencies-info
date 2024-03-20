@@ -1,40 +1,45 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using CryptocurrenciesInfo.Enums;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace CryptocurrenciesInfo.Models.DataBase
 {
-    [Table("coinmarket")]
-    [PrimaryKey(nameof(Name), nameof(Base), nameof(Target))]
+    [Table("CoinMarket")]
+    [PrimaryKey(nameof(Id))]
     public class CoinGeckoMarket : MarketBase
     {
-        [JsonProperty("base")]
-        public override string Base { get; set; } = string.Empty;
+        private const int MaxUrlLength = 2048;
 
-        [JsonProperty("target")]
-        public override string Target { get; set; } = string.Empty;
+        [JsonExtensionData] private IDictionary<string, JToken> additionalData;
+        public int Id { get; init; }
 
-        public string? Logo { get; set; } = string.Empty;
+        [JsonProperty("base")] public override required string Base { get; set; }
 
-        [JsonProperty("trust_score")]
-        public string Trust { get; set; } = string.Empty;
+        [JsonProperty("target")] public override required string Target { get; set; }
 
+        [MaxLength(MaxUrlLength)] public string Logo { get; set; } = string.Empty;
+
+        [JsonProperty("trust_score", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Trust Trust { get; set; }
+
+        [MaxLength(MaxUrlLength)]
         [JsonProperty("trade_url")]
-        public string? Link { get; set; } = string.Empty;
-
-        [JsonExtensionData]
-        protected IDictionary<string, JToken>? additionalData;
+        // TODO Check for null inserting
+        public string Link { get; set; } = string.Empty;
 
         [OnDeserialized]
-        protected void OnDeserialized(StreamingContext context)
+        private void OnDeserialized(StreamingContext context)
         {
-            // TODO Also check other code for "!"
-            // TODO learn NULL pattern
+            var market = additionalData["market"];
 
-            Name = (string?)additionalData?["market"]["name"] ?? throw new JsonSerializationException();
-            Logo = (string?)additionalData?["market"]["logo"] ?? string.Empty;
+            Name = (string?)market["name"] ?? throw new JsonSerializationException();
+            Logo = (string?)market["logo"] ?? string.Empty;
         }
     }
 }

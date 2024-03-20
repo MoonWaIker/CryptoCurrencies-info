@@ -22,4 +22,12 @@
     <PackageReference Include="RestSharp" Version="110.2.0" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Folder Include="Migrations\"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="Migrations\20240314175625_TrustToEnum.Designer.cs"/>
+	</ItemGroup>
+
 </Project>

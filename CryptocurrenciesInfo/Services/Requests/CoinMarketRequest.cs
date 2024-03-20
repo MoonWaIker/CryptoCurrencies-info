@@ -3,8 +3,8 @@ using MediatR;
 
 namespace CryptocurrenciesInfo.Services.Requests
 {
-    public class CoinMarketRequest : IRequest<IEnumerable<Coin>>
+    public sealed class CoinMarketRequest : IRequest<IEnumerable<Coin>>
     {
-        public int Limit { get; set; }
+        internal int Limit { get; init; }
     }
 }

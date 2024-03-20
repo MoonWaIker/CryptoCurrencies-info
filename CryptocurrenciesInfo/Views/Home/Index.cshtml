@@ -1,5 +1,4 @@
-﻿@using CryptocurrenciesInfo.Models
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -18,9 +17,11 @@
         {
             <tr>
                 <td>@coin.Rank</td>
-                <td><a class="page-link" asp-controller="Home" asp-action="Coin" asp-route-id="@coin.Id">@coin.Name</a></td>
+                <td>
+                    <a asp-action="Coin" asp-controller="Home" asp-route-id="@coin.Id" class="page-link">@coin.Name</a>
+                </td>
                 <td>@coin.CurrentPrice $</td>
-                <td>@coin.PriceChangePercentage24h %</td>
+                <td>@coin.PriceChangePercentage24H %</td>
                 <td>@coin.Volume $</td>
             </tr>
         }

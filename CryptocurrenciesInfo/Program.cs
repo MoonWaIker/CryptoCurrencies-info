@@ -1,5 +1,4 @@
-using CryptocurrenciesInfo.Services;
-using CryptocurrenciesInfo.Services.CryptoCurrencies;
+using CryptocurrenciesInfo.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +7,7 @@ builder.Services.AddControllersWithViews();
 
 // Add additional services
 builder.Services.AddServices();
-
-// Getting service and run
-builder.Services.AddHostedService<CoinGecko>();
+builder.Services.AddContext(builder.Configuration);
 
 var app = builder.Build();
 
@@ -18,7 +15,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -30,7 +26,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    "default",
+    "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

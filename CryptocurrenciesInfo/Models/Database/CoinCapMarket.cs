@@ -2,18 +2,14 @@ using Newtonsoft.Json;
 
 namespace CryptocurrenciesInfo.Models.DataBase
 {
-    public class CoinCapMarket : MarketBase
+    public sealed class CoinCapMarket : MarketBase
     {
-        [JsonProperty("exchangeId")]
-        public override string Name { get; set; } = string.Empty;
+        [JsonProperty("exchangeId")] public override required string Name { get; set; }
 
-        [JsonProperty("priceUsd")]
-        public decimal Price { get; set; }
+        [JsonProperty("priceUsd")] public required decimal Price { get; set; }
 
-        [JsonProperty("baseSymbol")]
-        public override string Base { get; set; } = string.Empty;
+        [JsonProperty("baseSymbol")] public override required string Base { get; set; }
 
-        [JsonProperty("quoteSymbol")]
-        public override string Target { get; set; } = string.Empty;
+        [JsonProperty("quoteSymbol")] public override required string Target { get; set; }
     }
 }

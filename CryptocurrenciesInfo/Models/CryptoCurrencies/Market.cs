@@ -1,9 +1,8 @@
 ﻿using CryptocurrenciesInfo.Models.DataBase;
 
-namespace CryptocurrenciesInfo.Models.Cryptocurrencies
+namespace CryptocurrenciesInfo.Models.Cryptocurrencies;
+
+public sealed class Market : CoinGeckoMarket
 {
-    public class Market : CoinGeckoMarket
-    {
-        public decimal Price { get; set; }
-    }
+    internal decimal Price { get; init; }
 }

@@ -1,7 +1,7 @@
 namespace CryptocurrenciesInfo.Models.Cryptocurrencies
 {
-    public class CoinFull : Coin
+    public sealed class CoinFull : Coin
     {
-        public Market[] Markets { get; set; } = Array.Empty<Market>();
+        public IEnumerable<Market> Markets { get; set; } = Array.Empty<Market>();
     }
 }
