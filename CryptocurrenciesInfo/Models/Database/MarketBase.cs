@@ -15,11 +15,6 @@ public class MarketBase : IEquatable<MarketBase>, IEqualityComparer<MarketBase>
         return x is not null && x.Equals(y);
     }
 
-    public int GetHashCode(MarketBase obj)
-    {
-        return HashCode.Combine(obj.Name.ToLower(), obj.Base.ToLower(), obj.Target.ToLower());
-    }
-
     public virtual bool Equals(MarketBase? other)
     {
         return other is not null && Name.Equals(other.Name, StringComparison.CurrentCultureIgnoreCase)
@@ -30,6 +25,11 @@ public class MarketBase : IEquatable<MarketBase>, IEqualityComparer<MarketBase>
     public override bool Equals(object? obj)
     {
         return Equals(obj as MarketBase);
+    }
+
+    public int GetHashCode(MarketBase obj)
+    {
+        return HashCode.Combine(obj.Name.ToLower(), obj.Base.ToLower(), obj.Target.ToLower());
     }
 
     public override int GetHashCode()
